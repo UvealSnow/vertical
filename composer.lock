@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1cc762efd9f1238ca53d768c7ae9c995",
-    "content-hash": "8b1485987e7c5949da82435d403e52e8",
+    "hash": "a7b0eb1b2bfeddb4cc9a2ea3efc5f872",
+    "content-hash": "ec9b2f28989b7e83377b36079fe476fa",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1929,6 +1929,50 @@
             "time": "2015-05-11 14:41:42"
         },
         {
+            "name": "heroku/heroku-buildpack-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heroku/heroku-buildpack-php.git",
+                "reference": "cd2d13992b72d049aa270d4b745aae6329e0c037"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/cd2d13992b72d049aa270d4b745aae6329e0c037",
+                "reference": "cd2d13992b72d049aa270d4b745aae6329e0c037",
+                "shasum": ""
+            },
+            "bin": [
+                "bin/heroku-hhvm-apache2",
+                "bin/heroku-hhvm-nginx",
+                "bin/heroku-php-apache2",
+                "bin/heroku-php-nginx"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Zuelke",
+                    "email": "dz@heroku.com"
+                }
+            ],
+            "description": "Toolkit for starting a PHP application locally, with or without foreman, using the same config for PHP/HHVM and Apache2/Nginx as on Heroku",
+            "homepage": "https://github.com/heroku/heroku-buildpack-php",
+            "keywords": [
+                "apache",
+                "apache2",
+                "foreman",
+                "heroku",
+                "hhvm",
+                "nginx",
+                "php"
+            ],
+            "time": "2016-07-21 11:26:05"
+        },
+        {
             "name": "mockery/mockery",
             "version": "0.9.5",
             "source": {
@@ -3155,7 +3199,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "heroku/heroku-buildpack-php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
