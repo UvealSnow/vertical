@@ -48,14 +48,14 @@
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Confirmar contraseña</label>
                             <div class="col-md-6">
-                                <input id="text" type="password" class="form-control" name="confirm_password" placeholder="Contraseña">
+                                <input id="text" type="password" class="form-control" name="confirm_password" placeholder="Confirmar contraseña">
                             </div>
                         </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Tipo de usuario</label>
                             <div class="col-md-6">
-                                <select class="form-control">
+                                <select name="privilege" class="form-control">
                                     <option value="Alumna">Alumna</option>
                                     <option value="Maestra">Maestra</option>
                                     <option value="Nutriologa">Nutrióloga</option>
