@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Package;
 
-class PackagesController extends Controller
+class PackageController extends Controller
 {
+    public function __contruct () {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,10 @@ class PackagesController extends Controller
      */
     public function index()
     {
-        //
+        $packages = Package::all();
+        return view('package.index', [
+            'packages' => $packages,
+        ]);
     }
 
     /**
@@ -25,7 +33,7 @@ class PackagesController extends Controller
      */
     public function create()
     {
-        //
+        return view('package.create');
     }
 
     /**
@@ -36,7 +44,16 @@ class PackagesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        # var_dump($request->input()['name']);
+        $package = new Package;
+
+        $package->name = $request->name;
+        $package->cost = $request->cost;
+        $package->lessons = $request->lessons;
+
+        $package->save();
+
+        return redirect('/package');
     }
 
     /**
@@ -47,7 +64,11 @@ class PackagesController extends Controller
      */
     public function show($id)
     {
-        //
+        $package = Package::find($id);
+        # var_dump($package);
+        return view('package.show', [
+            'package' => $package,
+        ]);
     }
 
     /**
@@ -58,7 +79,10 @@ class PackagesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $package = Package::find($id);
+        return view('package.edit', [
+            'package' => $package,
+        ]);
     }
 
     /**
@@ -70,7 +94,15 @@ class PackagesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $package = Package::find($id);
+
+        $package->name = $request->name;
+        $package->cost = $request->cost;
+        $package->lessons = $request->lessons;
+
+        $package->save();
+
+        return redirect('/package');
     }
 
     /**
@@ -81,6 +113,8 @@ class PackagesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $package = Package::find($id);
+        $package->delete();
+        return redirect('/package');
     }
 }

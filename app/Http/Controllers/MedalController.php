@@ -5,17 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Medal;
 
 class MedalController extends Controller
 {
+    public function __contruct () {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $req)
     {
-        //
+        $user = $req->user();
+        if ($user->privilege === 'admin') $medals = Medal::all();
+        else $medals = $user->medals;
+        
+        return view('medal.index', [
+            'user' => $user,
+            'medals' => $medals,
+        ]);
     }
 
     /**
@@ -25,7 +36,7 @@ class MedalController extends Controller
      */
     public function create()
     {
-        //
+        return view('medal.create');
     }
 
     /**
@@ -36,7 +47,16 @@ class MedalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        # var_dump($request->input()['name']);
+        $medal = new Medal;
+
+        $medal->name = $request->name;
+        $medal->desc = $request->desc;
+        $medal->img = $request->img;
+
+        $medal->save();
+
+        return redirect('/medal');
     }
 
     /**
@@ -47,7 +67,11 @@ class MedalController extends Controller
      */
     public function show($id)
     {
-        //
+        $medal = Medal::find($id);
+        # var_dump($medal);
+        return view('medal.show', [
+            'medal' => $medal,
+        ]);
     }
 
     /**
@@ -58,7 +82,10 @@ class MedalController extends Controller
      */
     public function edit($id)
     {
-        //
+        $medal = Medal::find($id);
+        return view('medal.edit', [
+            'medal' => $medal,
+        ]);
     }
 
     /**
@@ -70,7 +97,15 @@ class MedalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $medal = Medal::find($id);
+
+        $medal->name = $request->name;
+        $medal->desc = $request->desc;
+        $medal->img = $request->img;
+
+        $medal->save();
+
+        return redirect('/medal');
     }
 
     /**
@@ -81,6 +116,8 @@ class MedalController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $medal = Medal::find($id);
+        $medal->delete();
+        return redirect('/medal');
     }
 }

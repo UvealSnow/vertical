@@ -12,7 +12,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name', 'last_name', 'phone', 'privilege', 'available_lessons', 'email', 'password',
     ];
 
     /**
@@ -27,4 +27,13 @@ class User extends Authenticatable
     public function medals () {
         return $this->belongsToMany('App\Medal');
     }
+
+    public function lessons () {
+        return $this->belongsToMany('App\Lesson')->withPivot('pole_id');
+    }
+
+    public function poles () {
+        return $this->hasMany('App\Pole');
+    }
+
 }
