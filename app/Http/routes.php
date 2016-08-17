@@ -24,6 +24,7 @@ Route::get('/lesson/signup', 'LessonController@signUp');
 Route::post('/lesson/signup', 'LessonController@enrollUser');
 Route::resource('lesson', 'LessonController');
 
+Route::resource('user', 'UserController');
 
 Route::auth();
 Route::get('/home', 'HomeController@index');

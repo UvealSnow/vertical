@@ -13,4 +13,8 @@ class Lesson extends Model
     public function poles () {
     	return $this->hasMany('App\Pole');
     }
+
+    public function users () {
+    	return $this->belongsToMany('App\User')->withPivot('pole_id');
+    }
 }

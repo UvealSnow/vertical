@@ -68,11 +68,18 @@ class LessonController extends Controller
         $lesson->enrolled_students = 0;
         $lesson->max_students = $request->max_num;
         $lesson->creator_id = $request->user()->id;
-
         $lesson->save();
 
         $start = intval(substr($request->start, 0,2));
         $ends = intval(substr($request->finish, 0,2));
+
+        if (strpos($request->start, 'PM')) {
+            $start += 12;
+            $ends += 12;
+        }
+
+        # var_dump($start, $ends);
+
         foreach ($request->days as $day) {
             $tag = Day::find($day);
             $lesson->days()->attach($tag, ['lesson_begins' => $start, 'lesson_ends' => $ends]); 
@@ -91,7 +98,14 @@ class LessonController extends Controller
      */
     public function show($id)
     {
-        //
+        $lesson = Lesson::find($id);
+        $user = User::find($lesson->creator_id);
+        $lesson->teacher = $user->first_name.' '.$user->last_name;
+
+        return view('lesson.show', [
+            'lesson' => $lesson,
+        ]);
+
     }
 
     /**
@@ -166,7 +180,7 @@ class LessonController extends Controller
             else $user->lessons()->attach($lesson, ['pole_id' => $req->pole_id]);
             $lesson->enrolled_students += 1;
             $lesson->save();
-            return redirect('/lessons')->with('good', 'Te inscribiste a la clase seleccionada');
+            return redirect('/lesson')->with('good', 'Te inscribiste a la clase seleccionada');
         }
         else return redirect('/lesson/signup')->with('error', 'No tienes clases disponibles para utilizar. ¡Compra un nuevo paquete!');
     }

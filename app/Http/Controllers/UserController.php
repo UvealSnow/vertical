@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Package;
+use app\User;
 
-class PackageController extends Controller
+class UserController extends Controller
 {
     public function __construct () {
         $this->middleware('auth');
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -20,9 +19,9 @@ class PackageController extends Controller
      */
     public function index()
     {
-        $packages = Package::all();
-        return view('package.index', [
-            'packages' => $packages,
+        $users = User::all();
+        return view('user.index', [
+            'users' => $users,
         ]);
     }
 
@@ -33,7 +32,7 @@ class PackageController extends Controller
      */
     public function create()
     {
-        return view('package.create');
+        return view('user.create');
     }
 
     /**
@@ -44,16 +43,18 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
-        # var_dump($request->input()['name']);
-        $package = new Package;
+        $user = new User;
 
-        $package->name = $request->name;
-        $package->cost = $request->cost;
-        $package->lessons = $request->lessons;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->email);
+        $user->privilege = $request->privilege;
+        $user->available_lessons = 0;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->phone = $request->phone;
 
-        $package->save();
-
-        return redirect('/package');
+        $user->save();
+        return redirect('/user');
     }
 
     /**
@@ -64,10 +65,9 @@ class PackageController extends Controller
      */
     public function show($id)
     {
-        $package = Package::find($id);
-        # var_dump($package);
-        return view('package.show', [
-            'package' => $package,
+        $user = User::find($id);
+        return view('user.show', [
+            'user' => $user,
         ]);
     }
 
@@ -79,9 +79,9 @@ class PackageController extends Controller
      */
     public function edit($id)
     {
-        $package = Package::find($id);
-        return view('package.edit', [
-            'package' => $package,
+        $user = User::find($id);
+        return view('user.edit', [
+            'user' => $user,
         ]);
     }
 
@@ -94,15 +94,18 @@ class PackageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $package = Package::find($id);
+        $user = User::find($id);
 
-        $package->name = $request->name;
-        $package->cost = $request->cost;
-        $package->lessons = $request->lessons;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->email);
+        $user->privilege = $request->privilege;
+        $user->available_lessons = 0;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->phone = $request->phone;
 
-        $package->save();
-
-        return redirect('/package');
+        $user->save();
+        return redirect('/user');
     }
 
     /**
@@ -113,8 +116,8 @@ class PackageController extends Controller
      */
     public function destroy($id)
     {
-        $package = Package::find($id);
-        $package->delete();
-        return redirect('/package');
+        $user = User::find($id);
+        $user->delete();
+        return redirect('/user');
     }
 }

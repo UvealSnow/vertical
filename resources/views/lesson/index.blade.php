@@ -15,6 +15,9 @@
                         @foreach ($lessons as $lesson)
                             <a href="{{ url('/lesson/'.$lesson->id) }}">{{ $lesson->name }}</a>
                             <a href="{{ url('/lesson/'.$lesson->id) }}">{{ $lesson->teacher }}</a>
+                            @foreach ($lesson->days as $day)
+                                <span>{{ $day->name }}</span>
+                            @endforeach
                             @if ($user->privilege === 'Maestra' || $user->privilege === 'admin')
                                 <a class="btn btn-xs btn-primary" href="{{ url('/lesson/'.$lesson->id).'/edit' }}">Editar</a>
                                 <form action="{{ url('/lesson/'.$lesson->id) }}" method="POST" style="display:inline-block;">
