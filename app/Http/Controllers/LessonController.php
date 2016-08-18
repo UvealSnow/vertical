@@ -193,8 +193,15 @@ class LessonController extends Controller
     */
     public function placeForm () {
         $lesson = Lesson::find($_GET['id']);
+        $used = array();
+
+        foreach ($lesson->users as $i => $user) {
+            $used[$i] = $user->pivot->pole_id;
+        }
+
         return view('lesson.pole', [
             'lesson' => $lesson,
+            'used' => $used,
         ]);
     }
 

@@ -13,8 +13,12 @@
                         @for ($i = 1; $i <= 7; $i++)
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="pole_id" id="optionsRadios1" value="{{ $i }}">
-                                    Pole: {{ $i }}
+                                    @if (in_array($i, $used))
+                                        <input type="radio" name="pole_id" id="optionsRadios1" value="{{ $i }}" disabled>
+                                    @else
+                                        <input type="radio" name="pole_id" id="optionsRadios1" value="{{ $i }}">
+                                    @endif
+                                        Pole: {{ $i }}
                                 </label>
                             </div>
                         @endfor
