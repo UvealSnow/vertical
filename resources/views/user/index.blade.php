@@ -12,7 +12,7 @@
                         @foreach ($users as $user)
                             <a href="{{ url('/user/'.$user->id) }}">{{ $user->first_name.' '.$user->last_name }}</a>
                             <span> {{ $user->privilege }} </span>
-                            @if ($user->privilege != 'admin')
+                            @if ($user->privilege != 'admin' || $user->id != Auth::user()->id)
                                 <a class="btn btn-xs btn-primary" href="{{ url('/user/'.$user->id).'/edit' }}">Editar</a>
                                 <form action="{{ url('/user/'.$user->id) }}" method="POST" style="display:inline-block;">
                                     {{ csrf_field() }}

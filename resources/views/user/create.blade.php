@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Nuevo usuario</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/package') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/user') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
