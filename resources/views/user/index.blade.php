@@ -95,7 +95,9 @@
             <div class="panel panel-default section-header">
                 <div class="panel-heading">Usuarios
                 <hr class="block-spacer">   
+                @if (Auth::user()->privilege === 'admin')
                 <a href="{{ url('/user/create') }}" class="new-btn"> Nuevo Usuario</a>
+                @endif
                 </div>
             </div>
             <div class="panel panel-default">
@@ -107,7 +109,7 @@
                             @if ($user->privilege === 'Alumna')
                                 <span class="user">
                                 <a href="{{ url('/user/'.$user->id) }}">{{ $user->first_name.' '.$user->last_name }}</a>
-                                @if ($user->privilege != 'admin' || $user->id != Auth::user()->id)
+                                @if (Auth::user()->privilege === 'admin' || Auth::user()->privilege === 'Maestra')
                                     <span class="btn-cont">
                                     <a class="btn btn-s btn-primary " href="{{ url('/user/'.$user->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
                                     <form action="{{ url('/user/'.$user->id) }}" method="POST" style="display:inline-block;">
@@ -123,6 +125,7 @@
                     @endif
                 </div>
             </div>
+            @if (Auth::user()->privilege === 'admin')
             <div class="panel panel-default">
                 <div class="panel-heading minor-header">Maestras
                 </div>
@@ -132,7 +135,7 @@
                             @if ($user->privilege === 'Maestra')
                                 <span class="user">
                                 <a href="{{ url('/user/'.$user->id) }}">{{ $user->first_name.' '.$user->last_name }}</a>
-                                @if ($user->privilege != 'admin' || $user->id != Auth::user()->id)
+                                @if (Auth::user()->privilege === 'admin' || Auth::user()->privilege === 'Maestra')
                                     <span class="btn-cont">
                                     <a class="btn btn-s btn-primary " href="{{ url('/user/'.$user->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
                                     <form action="{{ url('/user/'.$user->id) }}" method="POST" style="display:inline-block;">
@@ -157,7 +160,7 @@
                             @if ($user->privilege === 'Nutriologa')
                                 <span class="user">
                                 <a href="{{ url('/user/'.$user->id) }}">{{ $user->first_name.' '.$user->last_name }}</a>
-                                @if ($user->privilege != 'admin' || $user->id != Auth::user()->id)
+                                @if (Auth::user()->privilege === 'admin' || Auth::user()->privilege === 'Maestra')
                                     <span class="btn-cont">
                                     <a class="btn btn-s btn-primary " href="{{ url('/user/'.$user->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
                                     <form action="{{ url('/user/'.$user->id) }}" method="POST" style="display:inline-block;">
@@ -182,7 +185,7 @@
                             @if ($user->privilege === 'admin')
                                 <span class="user">
                                 <a href="{{ url('/user/'.$user->id) }}">{{ $user->first_name.' '.$user->last_name }}</a>
-                                @if ($user->privilege != 'admin' || $user->id != Auth::user()->id)
+                                @if (Auth::user()->privilege === 'admin' || Auth::user()->privilege === 'Maestra')
                                     <span class="btn-cont">
                                     <a class="btn btn-s btn-primary " href="{{ url('/user/'.$user->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
                                     <form action="{{ url('/user/'.$user->id) }}" method="POST" style="display:inline-block;">
@@ -198,6 +201,7 @@
                     @endif
                 </div>
             </div>
+            @endif
         </div>
     </div>
     <div class="row">

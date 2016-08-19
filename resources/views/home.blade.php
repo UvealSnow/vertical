@@ -110,14 +110,21 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-body">
+                    
                     <div class="combo-box">
+                        @if (Auth::user()->privilege === 'admin')
                         <div class="addnew-btn">
                             <a href="{{ url('/user/create') }}">+</a>
                         </div>
+                        @endif
+                        @if (Auth::user()->privilege != 'Alumna')
                         <div class="panel-btn">
                             <a href="{{ url('/user') }}">Usuarios</a>
                         </div>
+                        @endif
                     </div>
+                    
+                    @if (Auth::user()->privilege === 'admin')
                     <div class="combo-box">
                         <div class="addnew-btn">
                             <a href="{{ url('/package/create') }}">+</a>
@@ -126,18 +133,25 @@
                             <a href="{{ url('/package') }}">Paquetes</a>
                         </div>
                     </div>
+                    @endif
                     <div class="combo-box">
+                        @if (Auth::user()->privilege === 'admin' || Auth::user()->privilege === 'Maestra')
                         <div class="addnew-btn">
                             <a href="{{ url('/lesson/create') }}">+</a>
                         </div>
+                        @endif
+                        @if (Auth::user()->privilege != 'Nutriologa' )
                         <div class="panel-btn">
                             <a href="{{ url('/lesson') }}">Clases</a>
                         </div>
+                        @endif
                     </div>
                     <div class="combo-box">
+                        @if (Auth::user()->privilege === 'admin')
                         <div class="addnew-btn">
                             <a href="{{ url('/medal/create') }}">+</a>
                         </div>
+                        @endif
                         <div class="panel-btn">
                             <a href="{{ url('/medal') }}">Medallas</a>
                         </div>

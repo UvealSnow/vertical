@@ -69,7 +69,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="assets/Vertical.svg">
+                    <img src="/assets/Vertical.svg">
                 </a>
             </div>
 
@@ -88,7 +88,7 @@
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Register</a></li>
                     @elseif (Auth::user()->privilege === 'admin')
-                        <li><a href="{{ url('/user') }}">+ Usuarios</a></li>
+                        <li><a href="{{ url('/user') }}">Usuarios</a></li>
                         <li><a href="{{ url('/package') }}">Paquetes</a></li>
                         <li><a href="{{ url('/lesson') }}">Clases</a></li>
                         <li><a href="{{ url('/medal') }}">Medallas</a></li>

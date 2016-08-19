@@ -111,16 +111,17 @@
                 @if ($user->privilege === 'Maestra' || $user->privilege === 'admin')  
                     <a href="{{ url('/lesson/create') }}" class="new-btn"> Nueva Clase</a>
                 @endif
+                @if (Auth::user()->privilege === 'Alumna')
+                    <a href="{{ url('/lesson/signup') }}" class="new-btn">Incríbete a una clase</a>
+                @endif
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading minor-header">Clases
                 </div>
                 <div class="panel-body">
-                	@if (count($lessons) > 0)
-                        @if (Auth::user()->privilege === 'Alumna')
-                        <a href="{{ url('/lesson/signup') }}" class="new-btn">Incríbete a una clase</a>
-                        @endif
+                        
+                    @if (count($lessons) > 0)
                         <br>
                         @foreach ($lessons as $lesson)
                             <span class="lesson-box">
