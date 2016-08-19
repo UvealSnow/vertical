@@ -12,6 +12,10 @@
 */
 
 Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/login', function () {
     return view('auth.login');
 });
 
@@ -20,6 +24,7 @@ Route::resource('medal', 'MedalController');
 Route::resource('package', 'PackageController');
 
 Route::get('/lesson/pole', 'LessonController@placeForm');
+
 Route::get('/lesson/signup', 'LessonController@signUp');
 Route::post('/lesson/signup', 'LessonController@enrollUser');
 Route::resource('lesson', 'LessonController');
