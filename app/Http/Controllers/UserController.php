@@ -66,6 +66,12 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
+
+        foreach ($user->lessons as $lesson) {
+            $teacher = User::find($lesson->creator_id);
+            $lesson->teacher = $teacher->first_name.' '.$teacher->last_name;
+        }
+
         return view('user.show', [
             'user' => $user,
         ]);

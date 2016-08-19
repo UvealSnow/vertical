@@ -179,7 +179,10 @@ class LessonController extends Controller
             if (!$lesson->use_poles) $user->lessons()->attach($lesson, ['pole_id' => 0]);
             else $user->lessons()->attach($lesson, ['pole_id' => $req->pole_id]);
             $lesson->enrolled_students += 1;
+            $user->available_lessons -= 1;
+
             $lesson->save();
+            $user->save();
             return redirect('/lesson')->with('good', 'Te inscribiste a la clase seleccionada');
         }
         else return redirect('/lesson/signup')->with('error', 'No tienes clases disponibles para utilizar. ¡Compra un nuevo paquete!');
