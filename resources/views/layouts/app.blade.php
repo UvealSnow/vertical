@@ -13,15 +13,44 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
+    {{-- <link href="{{ elixir(function(mix) {
+        mix.sass('app.scss');
+    }); }}" rel="stylesheet"> --}}
+    <link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}"/> 
 
     <style>
-        body {
+        body{
             font-family: 'Lato';
+            font-size: 16px;
         }
 
-        .fa-btn {
+        @font-face {
+            font-family: NexaBlack;
+            src: url(../fonts/NexaBlack.otf);
+        }
+
+        @font-face {
+            font-family: NexaBold;
+            src: url(../fonts/NexaBold.otf);
+        }
+
+        @font-face {
+            font-family: Lato;
+            src: url(../fonts/Lato-Light.ttf);
+        }
+
+        .fa-btn{
             margin-right: 6px;
+        }
+        
+        .navbar-brand{
+            margin:0;
+            padding:0;
+            display: flex;
+            align-items: center;
+        }
+        .navbar-brand img{
+            width: 120px;
         }
     </style>
 </head>
@@ -40,14 +69,16 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Laravel
+                    <img src="assets/Vertical.svg">
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a></li>
+                    @if (Auth::check())
+                    <li><a href="{{ url('/home') }}">Mi Panel</a></li>
+                    @endif
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -73,7 +104,7 @@
                                 {{ Auth::user()->first_name.' '.Auth::user()->last_name }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     @endif
