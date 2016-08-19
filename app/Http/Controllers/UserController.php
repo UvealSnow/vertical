@@ -41,12 +41,12 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store (Request $request)
     {
         $user = new User;
 
         $user->email = $request->email;
-        $user->password = bcrypt($request->email);
+        $user->password = bcrypt($request->password);
         $user->privilege = $request->privilege;
         $user->available_lessons = 0;
         $user->first_name = $request->first_name;
