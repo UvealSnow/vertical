@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use app\User;
+use App\User;
+use App\Package;
 
 class UserController extends Controller
 {
@@ -41,12 +42,12 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store (Request $request)
     {
         $user = new User;
 
         $user->email = $request->email;
-        $user->password = bcrypt($request->email);
+        $user->password = bcrypt($request->password);
         $user->privilege = $request->privilege;
         $user->available_lessons = 0;
         $user->first_name = $request->first_name;
@@ -66,6 +67,12 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
+
+        foreach ($user->lessons as $lesson) {
+            $teacher = User::find($lesson->creator_id);
+            $lesson->teacher = $teacher->first_name.' '.$teacher->last_name;
+        }
+
         return view('user.show', [
             'user' => $user,
         ]);
@@ -120,4 +127,31 @@ class UserController extends Controller
         $user->delete();
         return redirect('/user');
     }
+
+    /**
+     * Show add package to user form.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showAddForm ($id) {
+        $user = User::find($id);
+        $packages = Package::all();
+        if ($user->privilege = 'admin') {
+            return view('user.package', [
+                'user' => $user,
+                'packages' => $packages,
+            ]);
+        }
+        else return redirect('/user/$id');
+    }
+
+    public function addPackage (Request $req) {
+        $user = User::find($req->user_id);
+        $package = Package::find($req->package_id);
+        $user->available_lessons += $package->lessons;
+        $user->save();
+        return redirect('/user/'.$user->id);
+    }
+
 }
