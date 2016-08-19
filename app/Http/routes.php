@@ -24,6 +24,8 @@ Route::get('/lesson/signup', 'LessonController@signUp');
 Route::post('/lesson/signup', 'LessonController@enrollUser');
 Route::resource('lesson', 'LessonController');
 
+Route::get('/user/{id}/package', 'UserController@showAddForm');
+Route::post('/user/package', 'UserController@addPackage');
 Route::resource('user', 'UserController');
 
 Route::auth();

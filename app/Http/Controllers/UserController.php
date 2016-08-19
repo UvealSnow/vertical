@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use app\User;
+use App\User;
+use App\Package;
 
 class UserController extends Controller
 {
@@ -126,4 +127,31 @@ class UserController extends Controller
         $user->delete();
         return redirect('/user');
     }
+
+    /**
+     * Show add package to user form.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showAddForm ($id) {
+        $user = User::find($id);
+        $packages = Package::all();
+        if ($user->privilege = 'admin') {
+            return view('user.package', [
+                'user' => $user,
+                'packages' => $packages,
+            ]);
+        }
+        else return redirect('/user/$id');
+    }
+
+    public function addPackage (Request $req) {
+        $user = User::find($req->user_id);
+        $package = Package::find($req->package_id);
+        $user->available_lessons += $package->lessons;
+        $user->save();
+        return redirect('/user/'.$user->id);
+    }
+
 }

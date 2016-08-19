@@ -7,6 +7,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading"> {{ $user->first_name.' '.$user->last_name }} </div>
                 <div class="panel-body">
+                    @if (Auth::user()->privilege === 'admin')
+                        <a href="{{ url('/user/'.$user->id.'/package') }}">+ Agregar paquetes</a>
+                    @endif
                     <p>Email: {{ $user->email }} </p>
                     <p>Teléfono: {{ $user->phone }} </p>
                     <p>Clases disponibles: {{ $user->available_lessons }} </p>
