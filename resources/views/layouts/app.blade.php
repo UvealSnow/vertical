@@ -14,7 +14,14 @@
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
+
+    <script type="text/javascript" src="/assets/js/vendor/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="/assets/js/vendor/ui-select.min.js"></script>
+    <script type="text/javascript" src="/assets/js/app.js"></script>
 
     <style>
         body {
@@ -23,6 +30,26 @@
 
         .fa-btn {
             margin-right: 6px;
+        }
+
+        .select2 > .select2-choice.ui-select-match {
+            /* Because of the inclusion of Bootstrap */
+            height: 29px;
+        }
+
+        .selectize-control > .selectize-dropdown {
+            top: 36px;
+        }
+        /* Some additional styling to demonstrate that append-to-body helps achieve the proper z-index layering. */
+        .select-box {
+          background: #fff;
+          position: relative;
+          z-index: 1;
+        }
+        .alert-info.positioned {
+          margin-top: 1em;
+          position: relative;
+          z-index: 10000; /* The select2 dropdown has a z-index of 9999 */
         }
     </style>
 </head>
@@ -85,7 +112,38 @@
     </nav>
 
     <div class="container" ng-controller="uiSearchCtrl as ctrl">
-        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <form action="/user/profile/" method="POST">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="user_id" value=" <% ctrl.person.selected.id %> ">
+                    
+                    <div class="form-group">
+                        <label for="quote-name" class="col-sm-3 control-label"></label>
+                        <div class="col-sm-10">
+                            <div class="select-box">
+                               <ui-select ng-model="ctrl.person.selected" theme="select2" ng-disabled="ctrl.disabled" style="width: 100%;" title="Choose a person" append-to-body="true">
+                                  <ui-select-match placeholder="Selecciona o busca un cliente por nombre/email/compañía..."><% ctrl.person.selected.first_name + ' ' + ctrl.person.selected.last_name + ' - ' + ctrl.person.selected.email %></ui-select-match>
+                                  <ui-select-choices repeat="person in ctrl.people | propsFilter: {first_name: $select.search, email: $select.search }">
+                                     <div ng-bind-html="person.first_name + ' ' + person.last_name | highlight: $select.search"></div>
+                                     <small>
+                                        Email: <span ng-bind-html="person.email | highlight: $select.search"></span>
+                                     </small>
+                                  </ui-select-choices>
+                               </ui-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary">Buscar</button>
+                    </div>
+
+                    <br>
+
+                </form>
+            </div>
+        </div>
     </div>
 
     @yield('content')
@@ -93,8 +151,6 @@
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="/assets/js/vendor/angular.min.js"></script>
-    <script type="text/javascript" src="/assets/js/vendor/ui-select.min.js"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
 </html>

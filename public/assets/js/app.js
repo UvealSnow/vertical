@@ -1,4 +1,4 @@
-var app = angular.module('verticalApp', ['ui.select', 'ngSanitize', 'ng-currency'],
+var app = angular.module('verticalApp', ['ui.select', 'ngSanitize'],
 	function ($interpolateProvider) {
 		$interpolateProvider.startSymbol('<%');
 		$interpolateProvider.endSymbol('%>');
@@ -11,8 +11,7 @@ app.controller('uiSearchCtrl', function ($scope, $http, $timeout, $interval) {
    	vm.disabled = undefined;
    	vm.searchEnabled = undefined;
 
-   	$scope.concepts = [{'name': null, 'concept': null, 'desc': null},];
-   	$scope.selected = [];
+   	getUsers();
 
    	function getUsers () {
    		$http({
@@ -22,47 +21,36 @@ app.controller('uiSearchCtrl', function ($scope, $http, $timeout, $interval) {
    			vm.people = res.data;
    		});
    	}
-
-   	$scope.submitClient = function () {
-		var data = {'first': this.first, 'last': this.last, 'email': this.email, 'tel': this.tele, 'comp': this.comp };
-		$http({
-			method: 'POST',
-			url: '/clients/new',
-			data: data
-		}).then(function (res) {
-			$scope.created = true;
-			$scope.clients = res.data;
-			$('#addClient').modal('hide');
-			getClients();
-
-		}, function (res) {
-			console.log(data);
-		});
-	}
-
-	$scope.submitConcept = function () {
-		var data = {'name': this.name, 'cost': this.cost };
-		$http({
-			method: 'POST',
-			url: '/concepts/new',
-			data: data
-		}).then(function (res) {
-			$scope.created = true;
-			$scope.clients = res.data;
-			$('#addConcept').modal('hide');
-			getConcepts();
-		}, function (res) {
-			console.log('nope');
-		});
-	}
-
-	$scope.addConcepts = function () {
-		$scope.concepts.push({'name': null, 'concept': null, 'desc': null});
-		getConcepts();
-	}
-
-	$scope.deleteConcept = function (index) {
-		if ($scope.concepts.length != 1) $scope.concepts.splice(index, 1);
-	}
    	
+});
+
+app.filter('propsFilter', function() {
+  	return function(items, props) {
+	    var out = [];
+
+	    if (angular.isArray(items)) {
+	      	var keys = Object.keys(props);
+	        
+	      	items.forEach(function(item) {
+	        	var itemMatches = false;
+
+		        for (var i = 0; i < keys.length; i++) {
+		          	var prop = keys[i];
+		          	var text = props[prop].toLowerCase();
+		          	if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+		            	itemMatches = true;
+		            	break;
+		          	}
+		        }
+
+		        if (itemMatches) {
+		          	out.push(item);
+		        }
+	      	});
+	    } else {
+	      out = items;
+	    }
+
+	    return out;
+  	};
 });
