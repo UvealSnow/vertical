@@ -111,40 +111,42 @@
         </div>
     </nav>
 
-    <div class="container" ng-controller="uiSearchCtrl as ctrl">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <form action="/user/profile/" method="POST">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <input type="hidden" name="user_id" value=" <% ctrl.person.selected.id %> ">
-                    
-                    <div class="form-group">
-                        <label for="quote-name" class="col-sm-3 control-label"></label>
-                        <div class="col-sm-10">
-                            <div class="select-box">
-                               <ui-select ng-model="ctrl.person.selected" theme="select2" ng-disabled="ctrl.disabled" style="width: 100%;" title="Choose a person" append-to-body="true">
-                                  <ui-select-match placeholder="Selecciona o busca un cliente por nombre/email/compañía..."><% ctrl.person.selected.first_name + ' ' + ctrl.person.selected.last_name + ' - ' + ctrl.person.selected.email %></ui-select-match>
-                                  <ui-select-choices repeat="person in ctrl.people | propsFilter: {first_name: $select.search, email: $select.search }">
-                                     <div ng-bind-html="person.first_name + ' ' + person.last_name | highlight: $select.search"></div>
-                                     <small>
-                                        Email: <span ng-bind-html="person.email | highlight: $select.search"></span>
-                                     </small>
-                                  </ui-select-choices>
-                               </ui-select>
+    @if (Auth::user())
+        <div class="container" ng-controller="uiSearchCtrl as ctrl">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <form action="/user/profile/" method="POST">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="user_id" value=" <% ctrl.person.selected.id %> ">
+                        
+                        <div class="form-group">
+                            <label for="quote-name" class="col-sm-3 control-label"></label>
+                            <div class="col-sm-10">
+                                <div class="select-box">
+                                   <ui-select ng-model="ctrl.person.selected" theme="select2" ng-disabled="ctrl.disabled" style="width: 100%;" title="Choose a person" append-to-body="true">
+                                      <ui-select-match placeholder="Selecciona o busca un cliente por nombre/email/compañía..."><% ctrl.person.selected.first_name + ' ' + ctrl.person.selected.last_name + ' - ' + ctrl.person.selected.email %></ui-select-match>
+                                      <ui-select-choices repeat="person in ctrl.people | propsFilter: {first_name: $select.search, email: $select.search }">
+                                         <div ng-bind-html="person.first_name + ' ' + person.last_name | highlight: $select.search"></div>
+                                         <small>
+                                            Email: <span ng-bind-html="person.email | highlight: $select.search"></span>
+                                         </small>
+                                      </ui-select-choices>
+                                   </ui-select>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <button class="btn btn-primary">Buscar</button>
-                    </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary">Buscar</button>
+                        </div>
 
-                    <br>
+                        <br>
 
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
     @yield('content')
 
