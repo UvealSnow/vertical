@@ -26,6 +26,7 @@ Route::resource('lesson', 'LessonController');
 
 Route::get('/user/{id}/package', 'UserController@showAddForm');
 Route::post('/user/package', 'UserController@addPackage');
+Route::get('/user/list', 'UserController@listUsers');
 Route::resource('user', 'UserController');
 
 Route::auth();

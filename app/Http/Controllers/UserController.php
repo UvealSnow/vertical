@@ -154,4 +154,8 @@ class UserController extends Controller
         return redirect('/user/'.$user->id);
     }
 
+    public function listUsers () {
+        
+    }
+
 }
