@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
 use App\Package;
+use DB;
 
 class UserController extends Controller
 {
@@ -152,6 +153,18 @@ class UserController extends Controller
         $user->available_lessons += $package->lessons;
         $user->save();
         return redirect('/user/'.$user->id);
+    }
+
+    public function listUsers () {
+        $users = DB::table('users')->whereNotIn('privilege', ['admin'])->get();
+        return response()->json($users);
+    }
+
+    public function userProfile (Request $req) {
+        $user = User::find($req->user_id);
+        return view('user.show', [
+            'user' => $user,
+        ]);
     }
 
 }
