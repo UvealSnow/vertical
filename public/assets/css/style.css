@@ -11,6 +11,17 @@ html, body {
 }
 
 
+.btn-primary{
+    background-color: #FFE000 !important;
+    border:none !important;
+    transition: all 0.2s ease;
+    position: relative;
+    top: 4px;
+}
+.btn-primary:hover{
+    background-color: #FBC02D !important;
+}
+
 /* Style when highlighting a search. */
 .ui-select-highlight {
   font-weight: bold;
@@ -302,3 +313,46 @@ body > .ui-select-bootstrap.open {
           position: relative;
           z-index: 10000; /* The select2 dropdown has a z-index of 9999 */
         }
+
+
+/**
+*  So, yeah...
+*
+*
+*/
+
+.medal {
+  width: 150px;
+  height: 150px;
+  display: inline-block;
+  border: 1px solid #FFE000;
+  border-radius: 15px;
+}
+
+.medal p {
+  width: 140px;
+  margin: 0 auto;
+  padding: 15px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.medal p:last-of-type {
+  padding: 2.5px 15px;
+  font-size: 13px;
+}
+
+.section__title {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+

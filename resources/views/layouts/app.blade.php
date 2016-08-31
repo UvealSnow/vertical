@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
-    <link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}"/> 
 
     <script type="text/javascript" src="/assets/js/vendor/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
@@ -152,7 +151,7 @@
                             <div class="col-sm-10">
                                 <div class="select-box">
                                    <ui-select ng-model="ctrl.person.selected" theme="select2" ng-disabled="ctrl.disabled" style="width: 100%;" title="Choose a person" append-to-body="true">
-                                      <ui-select-match placeholder="Selecciona o busca un cliente por nombre/email/compañía..."><% ctrl.person.selected.first_name + ' ' + ctrl.person.selected.last_name + ' - ' + ctrl.person.selected.email %></ui-select-match>
+                                      <ui-select-match placeholder="Selecciona o busca un cliente por nombre o email"><% ctrl.person.selected.first_name + ' ' + ctrl.person.selected.last_name + ' - ' + ctrl.person.selected.email %></ui-select-match>
                                       <ui-select-choices repeat="person in ctrl.people | propsFilter: {first_name: $select.search, email: $select.search }">
                                          <div ng-bind-html="person.first_name + ' ' + person.last_name | highlight: $select.search"></div>
                                          <small>
