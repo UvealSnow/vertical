@@ -162,6 +162,12 @@ class UserController extends Controller
 
     public function userProfile (Request $req) {
         $user = User::find($req->user_id);
+
+        foreach ($user->lessons as $lesson) {
+            $instructor = User::find($lesson->creator_id);
+            $lesson->instructor = $instructor->first_name.' '.$instructor->last_name;
+        }
+
         return view('user.show', [
             'user' => $user,
         ]);

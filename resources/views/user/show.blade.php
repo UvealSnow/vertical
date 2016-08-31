@@ -53,7 +53,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default ">
-                <div class="panel-heading"> Perfil </div>
+                <div class="panel-heading"> Mi perfil </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading"> {{ $user->first_name.' '.$user->last_name }} </div>
@@ -67,12 +67,12 @@
                     @if (Auth::user()->privilege === 'admin')
                     <p>Privilegios: {{ $user->privilege }} </p>
                     @endif
-                    <h3>Clases</h3>
+                    <h3>Mis clases</h3>
                     <hr>
                     @if (count($user->lessons) > 0)
                         @foreach ($user->lessons as $i => $lesson)
-                            <p>Clase {{ $i.': '.$lesson->desc }}</p>
-                            <p>Profesor: {{ $lesson->teacher }}</p> 
+                            <p class="section__title">Clase {{ $i.': '.$lesson->desc }}</p>
+                            <p>Profesor: {{ $lesson->instructor }}</p> 
                             <p>Horario: </p>
                             @foreach ($lesson->days as $day)
                                 <p> {{ $day->name.': '.$day->pivot->lesson_begins.':00 - '.$day->pivot->lesson_ends.':00' }} </p>
@@ -80,7 +80,19 @@
                             <hr>
                         @endforeach
                     @else
-                        <p>No hay clases inscritas</p>
+                        <p>No hay clases inscritas</p><hr>
+                    @endif
+                    <h3>Mis medallas</h3>
+                    <hr>
+                    @if (count($user->medals) > 0)
+                        @foreach ($user->medals as $medal)
+                            <div class="medal">
+                                <p class="section__title">{{ $medal->name }}</p>
+                                <p>{{ $medal->desc }}</p>
+                            </div>
+                        @endforeach
+                    @else 
+                        <p>Este usuario no ha obtenido medallas aún</p>
                     @endif
                 </div>
             </div>
@@ -89,7 +101,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default logo-vertical">
-                <img src="assets/Verticalc.svg" alt="Vertical Pole & Fitness">
+                <img src="/assets/Verticalc.svg" alt="Vertical Pole & Fitness">
             </div>
         </div>
     </div>
