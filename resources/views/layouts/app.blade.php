@@ -15,8 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
-
-    {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
+    <link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}"/> 
 
     <script type="text/javascript" src="/assets/js/vendor/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
@@ -24,11 +23,27 @@
     <script type="text/javascript" src="/assets/js/app.js"></script>
 
     <style>
-        body {
+        body{
             font-family: 'Lato';
+            font-size: 16px;
         }
 
-        .fa-btn {
+        @font-face {
+            font-family: NexaBlack;
+            src: url(../fonts/NexaBlack.otf);
+        }
+
+        @font-face {
+            font-family: NexaBold;
+            src: url(../fonts/NexaBold.otf);
+        }
+
+        @font-face {
+            font-family: Lato;
+            src: url(../fonts/Lato-Light.ttf);
+        }
+
+        .fa-btn{
             margin-right: 6px;
         }
 
@@ -51,6 +66,16 @@
           position: relative;
           z-index: 10000; /* The select2 dropdown has a z-index of 9999 */
         }
+        
+        .navbar-brand{
+            margin:0;
+            padding:0;
+            display: flex;
+            align-items: center;
+        }
+        .navbar-brand img{
+            width: 120px;
+        }
     </style>
 </head>
 <body id="app-layout" ng-app="verticalApp">
@@ -68,14 +93,16 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Laravel
+                    <img src="/assets/Vertical.svg">
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a></li>
+                    @if (Auth::check())
+                    <li><a href="{{ url('/home') }}">Mi Panel</a></li>
+                    @endif
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -101,8 +128,9 @@
                                 {{ Auth::user()->first_name.' '.Auth::user()->last_name }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Cerrar Sesión</a></li>
                                 <li><a href="{{ url('/user/'.Auth::user()->id) }}"><i class="glyphicon glyphicon-user"></i> Perfil</a></li>
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Cerrar Sesión</a></li>
                             </ul>
                         </li>
                     @endif
