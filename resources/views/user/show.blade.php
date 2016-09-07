@@ -47,28 +47,62 @@
     .new-btn:hover{
         text-decoration: none;
     }
+
+    .pp-image{
+        margin: 1em auto;
+        text-align: center;
+    }
+
+    .pp-name{
+        text-align: center;
+        font-family: OstrichB;
+        font-size: 20px;
+    }
+
 </style>
 
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default ">
-                <div class="panel-heading"> Mi perfil </div>
-            </div>
             <div class="panel panel-default">
-                <div class="panel-heading"> {{ $user->first_name.' '.$user->last_name }} </div>
+                
+                <div class="panel-heading"> Mi Perfil</div>
+
+                <div class="pp-image">
+                    @if (Auth::user()->privilege === 'admin')
+                        <img src="/assets/admin.svg" alt="Administrador">
+                    @endif
+                    @if (Auth::user()->privilege === 'Maestra')
+                        <img src="/assets/ruler.svg" alt="Instructora">
+                    @endif
+                    @if (Auth::user()->privilege === 'Nutriologa')
+                        <img src="/assets/orange.svg" alt="Nutrióloga">
+                    @endif
+                    @if (Auth::user()->privilege === 'Alumna')
+                        <img src="/assets/student.svg" alt="Alumna">
+                    @endif
+                </div>
+
+                <h3 class="pp-name"> {{ $user->first_name.' '.$user->last_name }} </h3>
+                <hr>
                 <div class="panel-body">
                     @if (Auth::user()->privilege === 'admin')
                         <a href="{{ url('/user/'.$user->id.'/package') }}" class="new-btn">Agregar paquetes</a><br><br>
                     @endif
-                    <p>Email: {{ $user->email }} </p>
-                    <p>Teléfono: {{ $user->phone }} </p>
-                    <p>Clases disponibles: {{ $user->available_lessons }} </p>
+                    <p><b>Email:</b> {{ $user->email }} </p>
+                    <p><b>Teléfono:</b> {{ $user->phone }} </p>
+                    <p><b>Clases disponibles:</b> {{ $user->available_lessons }} </p>
                     @if (Auth::user()->privilege === 'admin')
-                    <p>Privilegios: {{ $user->privilege }} </p>
+                    <p><b>Privilegios:</b> {{ $user->privilege }} </p>
                     @endif
-                    <h3>Mis clases</h3>
-                    <hr>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                
+                <div class="panel-heading"> Mis Clases</div>
+                <div class="panel-body">
                     @if (count($user->lessons) > 0)
                         @foreach ($user->lessons as $i => $lesson)
                             <p class="section__title">Clase {{ $i.': '.$lesson->desc }}</p>
@@ -82,8 +116,14 @@
                     @else
                         <p>No hay clases inscritas</p><hr>
                     @endif
-                    <h3>Mis medallas</h3>
-                    <hr>
+                    </div>
+                    </div>
+                </div>
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                
+                <div class="panel-heading"> Mis Medallas</div>
+                    <div class="panel-body">
                     @if (count($user->medals) > 0)
                         @foreach ($user->medals as $medal)
                             <div class="medal">
@@ -94,6 +134,7 @@
                     @else 
                         <p>Este usuario no ha obtenido medallas aún</p>
                     @endif
+                    </div>
                 </div>
             </div>
         </div>

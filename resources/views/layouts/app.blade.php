@@ -4,8 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/reset.css">
+    <link rel="stylesheet" href="/assets/css/style.min.css">
 
-    <title>Laravel</title>
+    <title>Vertical Pole & Fitness</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
@@ -13,7 +15,10 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="/reset.css">
+    <link rel="stylesheet" href="/style.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
+
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
 
     <script type="text/javascript" src="/assets/js/vendor/angular.min.js"></script>
@@ -40,6 +45,11 @@
         @font-face {
             font-family: Lato;
             src: url(../fonts/Lato-Light.ttf);
+        }
+
+        @font-face {
+            font-family: OstrichB;
+            src: url(../fonts/OstrichSans-Bold.otf);
         }
 
         .fa-btn{
