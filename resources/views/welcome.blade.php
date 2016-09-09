@@ -1,4 +1,6 @@
+@extends('layouts.landing')
 
+@section('content')
 
 
 <!-- <div class="container">
@@ -23,17 +25,20 @@
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#intro">Inicio</a>
-        <a href="#classes">Clases</a>
-        <a href="#studio">Instalaciones</a>
-        <a href="#contact">Contacto</a>
+        <a href="{{ url('/') }}#intro" onclick="closeNav()">Inicio</a>
+        <a href="{{ url('/') }}#classes" onclick="closeNav()">Clases</a>
+        <a href="{{ url('/') }}#studio" onclick="closeNav()">Instalaciones</a>
+        <a href="{{ url('/') }}#contact" onclick="closeNav()">Contacto</a>
+        <a href="{{ url('/login') }}" onclick="closeNav()">Iniciar Sesión</a>
     </div>
     
     <div class="intro" id="intro">
+        <a href="{{ url('/login') }}" class="login-btn">Iniciar Sesión</a>
+
         <h1>Hora<br>de ser<br>increíble</h1>
 
         <div class="logo-m">
-            <img src="images/vertical.svg" alt="Vertical Pole & Fitness">
+            <img src="/assets/images/vertical.svg" alt="Vertical Pole & Fitness">
         </div>
     </div>
 
@@ -43,28 +48,28 @@
         </div>
         <h1>clases</h1>
         <div class="classes-btns">
-            <a href="">
+            <a href="{{ url('/pole-fitness') }}">
                 <div class="pole-btn">
                     <div>
                         <h2>Pole Fitness</h2>
                     </div>
                 </div>
             </a>
-            <a href="">
+            <a href="{{ url('/gap') }}">
                 <div class="gap-btn">
                     <div>
                         <h2>GAP</h2>
                     </div>
                 </div>
             </a>
-            <a href="">
+            <a href="{{ url('/vtraining') }}">
                 <div class="zumba-btn">
                     <div>
                         <h2>Vertical Training</h2>
                     </div>
                 </div>
             </a>
-            <a href="">
+            <a href="{{ url('/aerobics') }}">
                 <div class="aero-btn">
                     <div>
                         <h2>Aerobics</h2>
@@ -115,10 +120,10 @@
                 </p>
                 <div class="social-media">
                     <a href="https://www.facebook.com/VerticalFitMx/" target="_blank">
-                        <img src="images/facebook.svg" alt="Facebook Vertical">
+                        <img src="/assets/images/facebook.svg" alt="Facebook Vertical">
                     </a>
                     <a href="https://www.instagram.com/verticalfitmx/" target="_blank">
-                        <img src="images/instagram.svg" alt="Instagram Vertical">
+                        <img src="/assets/images/instagram.svg" alt="Instagram Vertical">
                     </a>
                 </div>
                 <div class="c-btn" id="myBtn" onclick="document.getElementById('myModal').style.display='block'">
@@ -127,15 +132,14 @@
             </div>
             <div class="map">
                 
-                <div id="map" style="width:100%;height:400px">
-                
+                <div id="map" style="width:100%;height:400px"></div>
             </div>
         </div>
     </div>
 
     <footer>
         <a href="http://www.nuva.rocks" target="_blank">
-            <img src="images/nuva.svg" alt="Desarrollado por Nuva Rocks">
+            <img src="/assets/images/nuva.svg" alt="Desarrollado por Nuva Rocks">
         </a>
     </footer>
 
@@ -143,14 +147,14 @@
     <div id="myModal" class="modal">
       <!-- Modal content -->
       <div class="modal-content animate">
-        <span class="close">&times;</span>
+        <span class="close" onclick="closeModal();">&times;</span>
         <h2>Déjanos un mensaje y pronto nos pondremos en contacto.</h2>
         <div class="contact-form">
             <form method="POST" action="https://formspree.io/contacto@verticalfit.mx">
-                <input type="text" placeholder="Nombre" required class="text-input" name="Nombre"></input>
-                <input type="email" placeholder="E-mail" required class="text-input" name="Mail"></input>
+                <input type="text" placeholder="Nombre" required class="text-input" name="Nombre"/>
+                <input type="email" placeholder="E-mail" required class="text-input" name="Mail"/>
                 <textarea placeholder="Mensaje" rows="4" required class="text-input" name="Msj"></textarea> 
-                <input type="submit"  class="c-btn" value="Enviar"></input>
+                <input type="submit"  class="c-btn" value="Enviar"/>
                 <input type="hidden" name="_next" value="thanks.html" />
                 <input type="hidden" name="_subject" value="Nuevo Mensaje" />
             </form>
@@ -159,3 +163,4 @@
 
     </div>
 
+@endsection

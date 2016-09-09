@@ -19,6 +19,21 @@ Route::get('/login', function () {
     return view('auth.login');
 });
 
+Route::get('/pole-fitness', function () {
+	return view('static.pole-fitness');
+});
+
+Route::get('/gap', function () {
+	return view('static.gap');
+});
+
+Route::get('/vtraining', function () {
+	return view('static.vtraining');
+});
+
+Route::get('/aerobics', function () {
+	return view('static.aerobics');
+});
 
 Route::resource('medal', 'MedalController');
 Route::resource('package', 'PackageController');

@@ -85,6 +85,10 @@
         .navbar-brand img{
             width: 120px;
         }
+
+        a{
+            text-decoration: none;
+        }
     </style>
 </head>
 <body id="app-layout" ng-app="verticalApp">
