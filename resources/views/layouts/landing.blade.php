@@ -56,10 +56,12 @@
             position: absolute;
             top: 0;
             right: 0;
+            font-size: 1.3em;
             margin-top: 1em;
             margin-right: 1em;
             text-transform: uppercase;
             text-decoration: none !important;
+            font-weight: bolder;
         }
     </style>
 </head>
