@@ -27,15 +27,24 @@ class LessonController extends Controller
         elseif ($user->privilege === 'admin') $lessons = Lesson::all();
         else $lessons = $user->lessons;
 
-        foreach ($lessons as $lesson) {
-            $teacher = User::find($lesson->creator_id);
-            $lesson->teacher = $teacher->first_name.' '.$teacher->last_name;
+        if (count($lessons) > 0) {
+            foreach ($lessons as $lesson) {
+                $teacher = User::find($lesson->creator_id);
+                $lesson->teacher = $teacher['first_name'].' '.$teacher['last_name'];
+            }
         }
+        else {
+            foreach ($lessons as $lesson) {
+                $lesson->teacher = 'null';
+            }
+        }
+        
         
         return view('lesson.index', [
             'user' => $user,
             'lessons' => $lessons,
         ]);
+        
         
     }
 
