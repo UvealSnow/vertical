@@ -34,7 +34,7 @@
 			- Bajarás esos kilitos de más<br>
 			- Brazos y Piernas firmes.
 		</div>
-		<a href="index.html#contact">
+		<a href="{{ url('/') }}#contact">
 		<div class="c-btn pole-s-btn">
 			Incríbete
 		</div>

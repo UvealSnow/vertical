@@ -31,7 +31,7 @@
 			
 			No importa qué edad tengas y tampoco si eres una deportista innata o una papa en el sofá. Las rutinas van subiendo de intensidad poco a poco para que el trabajo no sea tan abrumador.<br><br> ¡Atrévete a probarlo! <br><br>
 		</div>
-		<a href="index.html#contact">
+		<a href="{{ url('/') }}#contact">
 		<div class="c-btn aero-s-btn">
 			Incríbete
 		</div>

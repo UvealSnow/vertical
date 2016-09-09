@@ -33,7 +33,7 @@
 			- Pelotas<br>
 			- Ligas<br>
 		</div>
-		<a href="index.html#contact">
+		<a href="{{ url('/') }}#contact">
 		<div class="c-btn vt-s-btn">
 			Incríbete
 		</div>
