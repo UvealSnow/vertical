@@ -61,7 +61,13 @@
                         <div class="form-group">
                             <label for="lessons" class="col-md-4 control-label">Clases incluidas</label>
                             <div class="col-md-6">
-                                <input id="lessons" type="number" class="form-control" min="1" placeholder="Lecciones incluidas" name="lessons">
+                                <input id="lessons" type="number" class="form-control" min="1" placeholder="Clases incluidas" name="lessons">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <label> <input type="checkbox" name="is_pole" value="true"> Clases de Pole</label>
                             </div>
                         </div>
 
@@ -81,7 +87,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default logo-vertical">
-                <img src="assets/Verticalc.svg" alt="Vertical Pole & Fitness">
+                <img src="/assets/Verticalc.svg" alt="Vertical Pole & Fitness">
             </div>
         </div>
     </div>

@@ -100,5 +100,22 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default logo-vertical">
+                <img src="/assets/Verticalc.svg" alt="Vertical Pole & Fitness">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default dir-vertical">
+                <p>
+                    Av. Tercer Milenio #385<br>
+                    San Luis Potosí, 78211
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

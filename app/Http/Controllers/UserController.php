@@ -69,11 +69,6 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        foreach ($user->lessons as $lesson) {
-            $teacher = User::find($lesson->creator_id);
-            $lesson->teacher = $teacher->first_name.' '.$teacher->last_name;
-        }
-
         return view('user.show', [
             'user' => $user,
         ]);
@@ -160,17 +155,29 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-    public function userProfile (Request $req) {
-        $user = User::find($req->user_id);
+    public function userProfile (Request $request) {
+        $user = User::find($request->user()->id);
+        $user->lessons = $user->lessons->groupBy('id');
 
         foreach ($user->lessons as $lesson) {
-            $instructor = User::find($lesson->creator_id);
-            $lesson->instructor = $instructor->first_name.' '.$instructor->last_name;
+            $lesson[0]->schedule = DB::table('lesson_user')
+            ->join('day_lesson', 'lesson_user.day_id', '=', 'day_lesson.id')
+            ->join('days', 'day_lesson.day_id', '=', 'days.id')
+            ->select('*')
+            ->where('lesson_user.user_id', $user->id)
+            ->where('lesson_user.lesson_id', $lesson[0]->id)
+            ->get();
+
+            /*echo '<pre>';
+            var_dump($lesson[0]->schedule);
+            echo '</pre>';*/
+            
         }
 
         return view('user.show', [
             'user' => $user,
         ]);
+
     }
 
 }

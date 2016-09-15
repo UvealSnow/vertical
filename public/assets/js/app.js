@@ -24,6 +24,18 @@ app.controller('uiSearchCtrl', function ($scope, $http, $timeout, $interval) {
    	
 });
 
+app.controller('daysController', function ($scope) {
+	$scope.days = [{ 'date': null },];
+
+	$scope.addDays = function () {
+		$scope.days.push({ 'date': null });
+	}
+
+	$scope.removeDays = function (index) {
+		if ($scope.days.length > 1) $scope.days.splice(index, 1);
+	}
+}),
+
 app.filter('propsFilter', function() {
   	return function(items, props) {
 	    var out = [];

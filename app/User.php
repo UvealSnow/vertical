@@ -4,8 +4,7 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     /**
      * The attributes that are mass assignable.
      *
@@ -24,16 +23,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function lessons () {
+        return $this->belongsToMany('App\Lesson')->withPivot('id', 'lesson_id', 'pole_id', 'day_id');
+    }
+
     public function medals () {
         return $this->belongsToMany('App\Medal');
-    }
-
-    public function lessons () {
-        return $this->belongsToMany('App\Lesson')->withPivot('pole_id');
-    }
-
-    public function poles () {
-        return $this->hasMany('App\Pole');
     }
 
 }

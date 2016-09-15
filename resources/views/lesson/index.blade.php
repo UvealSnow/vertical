@@ -117,40 +117,33 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading minor-header">Clases
-                </div>
+                <div class="panel-heading minor-header">Clases</div>
                 <div class="panel-body">
                         
                     @if (count($lessons) > 0)
                         <br>
                         @foreach ($lessons as $lesson)
                             <span class="lesson-box">
-
-                            <span class="lesson-dtl">
-                            <span>
-                            <a href="{{ url('/lesson/'.$lesson->id) }}">{{ $lesson->name }}</a> con: 
-                            <a href="{{ url('/lesson/'.$lesson->id) }}">{{ $lesson->teacher }}</a>
-                            </span>
-                            <span>
-                            @foreach ($lesson->days as $day)
-                                <span>{{ $day->name }} -</span>
-                            @endforeach
-                            </span>
-                            </span>
-                            @if ($user->privilege === 'Maestra' || $user->privilege === 'admin')
-                            <span class="btn-cont">
-                                <a class="btn btn-s btn-primary" href="{{ url('/lesson/'.$lesson->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
-                                <form action="{{ url('/lesson/'.$lesson->id) }}" method="POST" style="display:inline-block;">
-                                    {{ csrf_field() }}
-                                    <input type="hidden" name="_method" value="delete">
-                                    <button class="btn btn-s btn-danger" on-click="form.submit()"><i class="fa fa-minus-square icon-btn icon-delete" aria-hidden="true"></i></button>
-                                </form>
-                            </span>
-                            @endif
+                                <span class="lesson-dtl">
+                                    <span>
+                                        <a href="{{ url('/lesson/'.$lesson->id) }}">{{ $lesson->name }}</a> con: 
+                                        <a href="{{ url('/lesson/'.$lesson->teacher_id) }}">{{ $lesson->teacher->first_name }}</a>
+                                    </span>
+                                </span>
+                                @if ($user->privilege === 'Maestra' || $user->privilege === 'admin')
+                                    <span class="btn-cont">
+                                        <a class="btn btn-s btn-primary" href="{{ url('/lesson/'.$lesson->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
+                                        <form action="{{ url('/lesson/'.$lesson->id) }}" method="POST" style="display:inline-block;">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="_method" value="delete">
+                                            <button class="btn btn-s btn-danger" on-click="form.submit()"><i class="fa fa-minus-square icon-btn icon-delete" aria-hidden="true"></i></button>
+                                        </form>
+                                    </span>
+                                @endif
                             </span>
                         @endforeach
                     @else
-                        <p>No tienes clases programadas</p>
+                        <p>No existen clases</p>
                     @endif
                 </div>
             </div>
@@ -159,7 +152,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default logo-vertical">
-                <img src="assets/Verticalc.svg" alt="Vertical Pole & Fitness">
+                <img src="/assets/Verticalc.svg" alt="Vertical Pole & Fitness">
             </div>
         </div>
     </div>

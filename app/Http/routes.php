@@ -38,17 +38,18 @@ Route::get('/aerobics', function () {
 Route::resource('medal', 'MedalController');
 Route::resource('package', 'PackageController');
 
-Route::get('/lesson/pole', 'LessonController@placeForm');
 
-Route::get('/lesson/signup', 'LessonController@signUp');
-Route::post('/lesson/signup', 'LessonController@enrollUser');
+Route::get('/lesson/pole', 'LessonController@placeForm');
+Route::post('/lesson/{id}/enroll', 'LessonController@enrollUser');
 Route::resource('lesson', 'LessonController');
 
 Route::get('/user/{id}/package', 'UserController@showAddForm');
 Route::post('/user/package', 'UserController@addPackage');
 Route::get('/user/list', 'UserController@listUsers');
-Route::post('/user/profile', 'UserController@userProfile');
-Route::resource('user', 'UserController');
+Route::get('/user/profile', 'UserController@userProfile');
+Route::resource('user', 'UserController', ['except' => [
+	'show',
+]]);
 
 Route::auth();
 Route::get('/home', 'HomeController@index');

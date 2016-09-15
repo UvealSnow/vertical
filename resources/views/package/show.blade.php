@@ -45,16 +45,19 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Medallas</div>
+                <div class="panel-heading">Paquete</div>
                 <div class="panel-body">
                     <span class="class-set">
-                	<b>Nombre del Paquete:</b> {{ $package->name }}<br>
+                	   <b>Nombre del Paquete:</b> {{ $package->name }}<br><br>
                     </span>
                     <span class="class-set">
-                    <b>Precio del Paquete:</b>$ {{ $package->cost }}.00<br>
+                        <b>Precio del Paquete:</b>$ {{ $package->cost }}.00<br><br>
                     </span>
                     <span class="class-set">
-                	<b>Clases incluidas:</b>{{ $package->lessons }}<br>
+                	    @if ($package->is_pole) <b>Clases de pole incluidas:</b>
+                        @else <b>Clases incluidas:</b>
+                        @endif
+                        {{ $package->lessons }}<br><br>
                     </span>
                 </div>
             </div>
@@ -63,7 +66,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default logo-vertical">
-                <img src="assets/Verticalc.svg" alt="Vertical Pole & Fitness">
+                <img src="/assets/Verticalc.svg" alt="Vertical Pole & Fitness">
             </div>
         </div>
     </div>

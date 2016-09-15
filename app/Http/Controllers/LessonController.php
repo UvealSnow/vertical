@@ -9,6 +9,7 @@ use App\Lesson;
 use App\Pole;
 use App\User;
 use App\Day;
+use DB;
 
 class LessonController extends Controller
 {
@@ -20,32 +21,18 @@ class LessonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $req)
-    {
-        $user = User::find($req->user()['id']);
-        if ($user->privilege === 'Maestra') $lessons = Lesson::all()->where('creator_id', $user->id);
-        elseif ($user->privilege === 'admin') $lessons = Lesson::all();
-        else $lessons = $user->lessons;
+    public function index(Request $request) {
+        $user = $request->user();
+        $lessons = Lesson::all();
 
-        if (count($lessons) > 0) {
-            foreach ($lessons as $lesson) {
-                $teacher = User::find($lesson->creator_id);
-                $lesson->teacher = $teacher['first_name'].' '.$teacher['last_name'];
-            }
+        foreach ($lessons as $lesson) {
+            $lesson->teacher = User::find($lesson->teacher_id);
         }
-        else {
-            foreach ($lessons as $lesson) {
-                $lesson->teacher = 'null';
-            }
-        }
-        
         
         return view('lesson.index', [
             'user' => $user,
             'lessons' => $lessons,
         ]);
-        
-        
     }
 
     /**
@@ -53,8 +40,7 @@ class LessonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         return view('lesson.create');
     }
 
@@ -64,35 +50,41 @@ class LessonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
+        $user = $request->user();
         $lesson = new Lesson;
 
-        # to do validation
-        
-        $lesson->name = $request->name;
-        $lesson->desc = $request->desc;
-        if ($request->use_pole == 'true') $lesson->use_poles = true;
+        $lesson->name = $request->input('name');
+        $lesson->desc = $request->input('desc');
+        $lesson->max_students = $request->input('max_num');
+
+        if ($request->input('type') === 'pole') $lesson->use_poles = true;
         else $lesson->use_poles = false;
-        $lesson->enrolled_students = 0;
-        $lesson->max_students = $request->max_num;
-        $lesson->creator_id = $request->user()->id;
-        $lesson->save();
 
-        $start = intval(substr($request->start, 0,2));
-        $ends = intval(substr($request->finish, 0,2));
+        $lesson->begins = $request->input('starts');
+        $lesson->ends = $request->input('ends');
 
-        if (strpos($request->start, 'PM')) {
-            $start += 12;
-            $ends += 12;
-        }
+        $lesson->teacher_id = $user->id;
 
-        # var_dump($start, $ends);
+        if ($lesson->save()) {
+            foreach ($request->input('days') as $day) { 
+                $today = date('d-m-Y');
+                # create 1 month of classes starting from closest day next week
+                if (intval($day) == 1) $start = date('d-m-Y', strtotime('next monday'));
+                elseif (intval($day) == 2) $start = date('d-m-Y', strtotime('next tuesday'));
+                elseif (intval($day) == 3) $start = date('d-m-Y', strtotime('next wednesday'));
+                elseif (intval($day) == 4) $start = date('d-m-Y', strtotime('next thursday'));
+                elseif (intval($day) == 5) $start = date('d-m-Y', strtotime('next friday'));
+                elseif (intval($day) == 6) $start = date('d-m-Y', strtotime('next saturday'));
+                elseif (intval($day) == 7) $start = date('d-m-Y', strtotime('next sunday'));
 
-        foreach ($request->days as $day) {
-            $tag = Day::find($day);
-            $lesson->days()->attach($tag, ['lesson_begins' => $start, 'lesson_ends' => $ends]); 
-            # The line above links lessons - day_lesson - days one day at a time, also sets the times
+                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => $start]);
+                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +7 days'))]);
+                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +14 days'))]);
+                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +21 days'))]);
+
+            }
         }
 
         return redirect('/lesson');
@@ -105,13 +97,13 @@ class LessonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show(Request $request, $id) {
+
+        $user = $request->user();
         $lesson = Lesson::find($id);
-        $user = User::find($lesson->creator_id);
-        $lesson->teacher = $user->first_name.' '.$user->last_name;
 
         return view('lesson.show', [
+            'user' => $user,
             'lesson' => $lesson,
         ]);
 
@@ -123,9 +115,22 @@ class LessonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit(Request $request, $id) {
+        $user =  $request->user();
+        if ($user->privilege != 'admin' && $user->privilege != 'Maestra') { # user does not have privilege to modify
+            return redirect('/lesson')->withErrors(['msg', 'No tienes privilegios para modificar esta clase']);
+        }
+        else { # user is either admin or teacher
+            $lesson = Lesson::find($id);
+            if ($user->id == $lesson->creator_id || $user->privilege === 'admin') {
+                return view('lesson.edit', [
+                    'lesson' => $lesson,
+                ]);
+            }
+            else {
+                return redirect('/lesson')->withErrors(['msg', 'No tienes privilegios para modificar esta clase']);
+            }
+        }
     }
 
     /**
@@ -159,9 +164,9 @@ class LessonController extends Controller
     * 
     * @return \Illuminate\Http\Response
     */
-    public function signUp (Request $req) {
-        $user = $req->user();
-        $lessons = Lesson::all();
+    public function signUp (Request $request, $id) {
+        $user = $request->user();
+        $lessons = Lesson::find($id);
         foreach ($lessons as $lesson) {
             $lesson->available = $lesson->max_students - $lesson->enrolled_students;
         }
@@ -181,20 +186,32 @@ class LessonController extends Controller
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
-    public function enrollUser (Request $req) {
-        $user = User::find($req->user()['id']);
-        $lesson = Lesson::find($req->lesson_id);
-        if ($user->available_lessons > 0) {
-            if (!$lesson->use_poles) $user->lessons()->attach($lesson, ['pole_id' => 0]);
-            else $user->lessons()->attach($lesson, ['pole_id' => $req->pole_id]);
-            $lesson->enrolled_students += 1;
-            $user->available_lessons -= 1;
+    public function enrollUser (Request $request, $id) {
 
-            $lesson->save();
-            $user->save();
-            return redirect('/lesson')->with('good', 'Te inscribiste a la clase seleccionada');
+        $user = $request->user();
+        $lesson = Lesson::find($id);
+        $days = $request->input('days');
+
+        if (($lesson->use_poles && $user->pole_lessons >= count($days)) || 
+            (!$lesson->use_poles && $user->available_lessons >= count($days))) {
+            foreach ($days as $day) {
+                if (isset($day['pole'])) $user->lessons()->attach($id, ['pole_id' => $day['pole'], 'day_id' => $day['day']]);
+                else $user->lessons()->attach($id, ['pole_id' => 0, 'day_id' => $day['day']]);
+
+                # take away one credit
+                if ($lesson->use_poles) $user->pole_lessons--;
+                else $user->available_lessons--;
+                $user->save();
+
+                # uodate day_lesson enrolled
+                $enrolled = $lesson->days($day['day'])->first()->pivot->enrolled + 1;
+                DB::table('day_lesson')->where('id', $day['day'])->update(['enrolled' => $enrolled]);
+            }
         }
-        else return redirect('/lesson/signup')->with('error', 'No tienes clases disponibles para utilizar. ¡Compra un nuevo paquete!');
+        
+
+        return redirect('/lesson');
+        
     }
 
     /**

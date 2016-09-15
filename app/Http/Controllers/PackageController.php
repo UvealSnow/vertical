@@ -31,8 +31,7 @@ class PackageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         return view('package.create');
     }
 
@@ -42,14 +41,14 @@ class PackageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         # var_dump($request->input()['name']);
         $package = new Package;
 
-        $package->name = $request->name;
-        $package->cost = $request->cost;
-        $package->lessons = $request->lessons;
+        $package->name = $request->input('name');
+        $package->cost = $request->input('cost');
+        $package->lessons = $request->input('lessons');
+        $package->is_pole = $request->input('is_pole');
 
         $package->save();
 
@@ -62,8 +61,7 @@ class PackageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         $package = Package::find($id);
         # var_dump($package);
         return view('package.show', [
@@ -77,8 +75,7 @@ class PackageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $package = Package::find($id);
         return view('package.edit', [
             'package' => $package,
@@ -92,13 +89,14 @@ class PackageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $package = Package::find($id);
 
-        $package->name = $request->name;
-        $package->cost = $request->cost;
-        $package->lessons = $request->lessons;
+        $package->name = $request->input('name');
+        $package->cost = $request->input('cost');
+        $package->lessons = $request->input('lessons');
+        if (null !== $request->input('is_pole'))$package->is_pole = true;
+        else $package->is_pole = false;
 
         $package->save();
 

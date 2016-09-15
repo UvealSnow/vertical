@@ -39,7 +39,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Nueva Clase</div>
+                <div class="panel-heading">Editar clase - {{ $lesson->name }}</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/lesson') }}">
                         {{ csrf_field() }}
@@ -47,59 +47,74 @@
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Nombre</label>
                             <div class="col-md-6">
-                                <input id="text" type="name" class="form-control" name="name" placeholder="Nombre de la clase" value="{{ old('name') }}" required>
+                                <input id="text" type="name" class="form-control" name="name" placeholder="Nombre" value="{{ $lesson->name }}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="desc" class="col-md-4 control-label">Descripción</label>
                             <div class="col-md-6">
-                                <input id="desc" type="text" class="form-control" name="desc" placeholder="Descripción de la clase" value="{{ old('desc') }}" required>
+                                <input id="desc" type="text" class="form-control" name="desc" placeholder="Descripción" value="{{ $lesson->desc }}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="max_num" class="col-md-4 control-label">Max. alumnas</label>
                             <div class="col-md-6">
-                                <input id="max_num" type="number" class="form-control" name="max_num" min="1" placeholder="Máximo número de estudiantes" value="{{ old('max_num') }}" required>
+                                <input id="max_num" type="number" class="form-control" name="max_num" min="1" placeholder="Máximo número de estudiantes" value="{{ $lesson->max_students }}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-4 control-label">Días</label>
                             <div class="col-md-6">
-                                <label><input type="checkbox" name="days[1]" value="1"> Lunes </label> <br>
-                                <label><input type="checkbox" name="days[2]" value="2"> Martes </label> <br>
-                                <label><input type="checkbox" name="days[3]" value="3"> Miércoles </label> <br>
-                                <label><input type="checkbox" name="days[4]" value="4"> Jueves </label> <br>
-                                <label><input type="checkbox" name="days[5]" value="5"> Viernes </label> <br>
-                                <label><input type="checkbox" name="days[6]" value="6"> Sábado </label> <br>
-                                <label><input type="checkbox" name="days[7]" value="7"> Domingo </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="inlineCheckbox1" name="days[]" value="1"> Lunes
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="inlineCheckbox2" name="days[]" value="2"> Martes
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="inlineCheckbox3" name="days[]" value="3"> Miércoles
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="inlineCheckbox4" name="days[]" value="4"> Jueves
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="inlineCheckbox5" name="days[]" value="5"> Viernes
+                                </label>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-4 control-label">Horario</label>
+                            <label for="start" class="col-md-4 control-label">Hora inicio</label>
                             <div class="col-md-6">
-                                <p>Inicia</p> <br>
-                                <input class="form-control" type="time" name="starts" required> <br>
-                                <p>Termina</p> <br>
-                                <input class="form-control" type="time" name="ends" required>
+                                <input id="start" type="time" class="form-control" name="start" value="10:00:PM">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-4 control-label">Tipo de clase</label>
+                            <label for="finish" class="col-md-4 control-label">Hora final</label>
                             <div class="col-md-6">
-                                <label> <input type="radio" name="type" value="pole" checked> Pole </label> <br>
-                                <label> <input type="radio" name="type" value="other"> Otras </label>
+                                <input id="finish" type="time" class="form-control" name="finish">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start" class="col-md-4 control-label">Usar Poles</label>
+                            <div class="col-md-6">
+                                @if ($lesson->use_poles)
+                                    <input type="checkbox" value="true" name="use_pole" checked>
+                                @else
+                                    <input type="checkbox" value="true" name="use_pole">
+                                @endif
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-sign-in"></i> Agregar
+                                    <i class="fa fa-btn fa-sign-in"></i> Modificar
                                 </button>
                             </div>
                         </div>

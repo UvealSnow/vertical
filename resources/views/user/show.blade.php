@@ -105,13 +105,15 @@
                 <div class="panel-body">
                     @if (count($user->lessons) > 0)
                         @foreach ($user->lessons as $i => $lesson)
-                            <p class="section__title">Clase {{ $i.': '.$lesson->desc }}</p>
-                            <p>Profesor: {{ $lesson->instructor }}</p> 
-                            <p>Horario: </p>
-                            @foreach ($lesson->days as $day)
-                                <p> {{ $day->name.': '.$day->pivot->lesson_begins.':00 - '.$day->pivot->lesson_ends.':00' }} </p>
+                            <p class="section__title">{{ $lesson[0]->name.': '.$lesson[0]->desc }}</p><br>
+                            <p>Profesor: {{ $lesson[0]->teacher->first_name }}</p> <br>
+                            <p>Horario: </p><br>
+                            @foreach ($lesson[0]->schedule as $schedule)
+                                <p>{{ $schedule->name.' '.$schedule->date.' de '.$lesson[0]->begins.' a '.$lesson[0]->ends }}</p>
+                                @if ($lesson[0]->use_poles)
+                                    <p>Pole: {{ $schedule->pole_id }}</p><br><br>
+                                @endif
                             @endforeach
-                            <hr>
                         @endforeach
                     @else
                         <p>No hay clases inscritas</p><hr>
