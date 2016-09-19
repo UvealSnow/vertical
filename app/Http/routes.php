@@ -47,9 +47,7 @@ Route::get('/user/{id}/package', 'UserController@showAddForm');
 Route::post('/user/package', 'UserController@addPackage');
 Route::get('/user/list', 'UserController@listUsers');
 Route::get('/user/profile', 'UserController@userProfile');
-Route::resource('user', 'UserController', ['except' => [
-	'show',
-]]);
+Route::resource('user', 'UserController');
 
 Route::auth();
 Route::get('/home', 'HomeController@index');
