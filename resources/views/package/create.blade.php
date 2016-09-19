@@ -59,15 +59,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="lessons" class="col-md-4 control-label">Clases incluidas</label>
+                            <label for="lessons" class="col-md-4 control-label">Clases regulares incluidas</label>
                             <div class="col-md-6">
-                                <input id="lessons" type="number" class="form-control" min="1" placeholder="Clases incluidas" name="lessons">
+                                <input id="lessons" type="number" class="form-control" min="1" placeholder="Clases incluidas" name="regular_lessons">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <label> <input type="checkbox" name="is_pole" value="true"> Clases de Pole</label>
+                            <label for="lessons" class="col-md-4 control-label">Clases de Pole incluidas</label>
+                            <div class="col-md-6">
+                                <input id="lessons" type="number" class="form-control" min="1" placeholder="Clases incluidas" name="pole_lessons">
                             </div>
                         </div>
 

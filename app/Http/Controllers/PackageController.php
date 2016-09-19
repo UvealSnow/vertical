@@ -47,8 +47,8 @@ class PackageController extends Controller
 
         $package->name = $request->input('name');
         $package->cost = $request->input('cost');
-        $package->lessons = $request->input('lessons');
-        $package->is_pole = $request->input('is_pole');
+        $package->regular_lessons = $request->input('regular_lessons');
+        $package->pole_lessons = $request->input('pole_lessons');
 
         $package->save();
 
@@ -94,9 +94,8 @@ class PackageController extends Controller
 
         $package->name = $request->input('name');
         $package->cost = $request->input('cost');
-        $package->lessons = $request->input('lessons');
-        if (null !== $request->input('is_pole'))$package->is_pole = true;
-        else $package->is_pole = false;
+        $package->regular_lessons = $request->input('regular_lessons');
+        $package->pole_lessons = $request->input('pole_lessons');
 
         $package->save();
 

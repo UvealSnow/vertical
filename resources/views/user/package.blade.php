@@ -15,7 +15,7 @@
                             <div class="radio">
                                 <label>
                                     <input type="radio" name="package_id" value="{{ $package->id }}">
-                                    {{ $package->name }}
+                                    {{ $package->name.' (créditos: '.$package->regular_lessons.', créditos pole: '.$package->pole_lessons.')' }}
                                 </label>
                             </div>
                         @endforeach

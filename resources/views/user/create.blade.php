@@ -114,7 +114,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default logo-vertical">
-                <img src="assets/Verticalc.svg" alt="Vertical Pole & Fitness">
+                <img src="/assets/Verticalc.svg" alt="Vertical Pole & Fitness">
             </div>
         </div>
     </div>

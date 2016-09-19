@@ -41,7 +41,12 @@ class LessonController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view('lesson.create');
+
+        $teachers = User::all()->where('privilege', 'Maestra');
+
+        return view ('lesson.create', [
+            'teachers' => $teachers,
+        ]);
     }
 
     /**
@@ -65,7 +70,8 @@ class LessonController extends Controller
         $lesson->begins = $request->input('starts');
         $lesson->ends = $request->input('ends');
 
-        $lesson->teacher_id = $user->id;
+        if ($request->input('teacher') !== NULL) $lesson->teacher_id = $request->input('teacher');
+        else $lesson->teacher_id = $user->id;
 
         if ($lesson->save()) {
             foreach ($request->input('days') as $day) { 

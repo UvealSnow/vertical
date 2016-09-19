@@ -20,20 +20,21 @@
                         <div class="form-group">
                             <label for="cost" class="col-md-4 control-label">Costo</label>
                             <div class="col-md-6">
-                                <input id="cost" type="number" class="form-control" name="cost" placeholder="Costo" min="1" value="{{ $package->cost }}">
+                                <input id="cost" type="number" class="form-control" name="cost" placeholder="Costo" min="0" value="{{ $package->cost }}">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="lessons" class="col-md-4 control-label">Clases incluidas</label>
+                            <label for="lessons" class="col-md-4 control-label">Clases regulares</label>
                             <div class="col-md-6">
-                                <input id="lessons" type="number" class="form-control" min="1" placeholder="Lecciones incluidas" name="lessons" value="{{ $package->lessons }}">
+                                <input id="lessons" type="number" class="form-control" min="0" placeholder="Lecciones incluidas" name="regular_lessons" value="{{ $package->regular_lessons }}">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <label> <input type="checkbox" name="is_pole" value="true" @if ($package->is_pole) checked @endif> Clases de Pole</label>
+                            <label for="lessons" class="col-md-4 control-label">Clases pole</label>
+                            <div class="col-md-6">
+                                <input id="lessons" type="number" class="form-control" min="0" placeholder="Lecciones incluidas" name="pole_lessons" value="{{ $package->pole_lessons }}">
                             </div>
                         </div>
 

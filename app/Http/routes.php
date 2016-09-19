@@ -47,6 +47,7 @@ Route::get('/user/{id}/package', 'UserController@showAddForm');
 Route::post('/user/package', 'UserController@addPackage');
 Route::get('/user/list', 'UserController@listUsers');
 Route::get('/user/profile', 'UserController@userProfile');
+Route::post('/user/profile', 'UserController@userShow');
 Route::resource('user', 'UserController');
 
 Route::auth();

@@ -155,7 +155,7 @@
         <div class="container" ng-controller="uiSearchCtrl as ctrl">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
-                    <form action="/user/profile/" method="POST">
+                    <form action="/user/profile" method="POST">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="user_id" value=" <% ctrl.person.selected.id %> ">
                         

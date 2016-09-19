@@ -51,6 +51,7 @@ class UserController extends Controller
         $user->password = bcrypt($request->password);
         $user->privilege = $request->privilege;
         $user->available_lessons = 0;
+        $user->pole_lessons = 0;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->phone = $request->phone;
@@ -95,16 +96,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $user = User::find($id);
 
         $user->email = $request->email;
-        $user->password = bcrypt($request->email);
         $user->privilege = $request->privilege;
-        $user->available_lessons = 0;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
+        $user->available_lessons = $request->regular_lessons;
+        if ($request->regular_lessons === 0) $user->lesson_expire = null;
+        $user->pole_lessons = $request->pole_lessons;
+        if ($request->pole_lessons === 0) $user->pole_expire = null;
         $user->phone = $request->phone;
 
         $user->save();
@@ -145,7 +147,14 @@ class UserController extends Controller
     public function addPackage (Request $req) {
         $user = User::find($req->user_id);
         $package = Package::find($req->package_id);
-        $user->available_lessons += $package->lessons;
+        if ($package->regular_lessons != 0) {
+            $user->available_lessons += $package->regular_lessons;
+            $user->lesson_expire = date('d-m-Y', strtotime('+30 days'));
+        }
+        if ($package->pole_lessons) { 
+            $user->pole_lessons += $package->pole_lessons;
+            $user->pole_expire = date('d-m-Y', strtotime('+30 days'));
+        }
         $user->save();
         return redirect('/user/'.$user->id);
     }
@@ -178,6 +187,10 @@ class UserController extends Controller
             'user' => $user,
         ]);
 
+    }
+
+    public function userShow (Request $request) {
+        return redirect ('/user/'.$request->user_id);
     }
 
 }

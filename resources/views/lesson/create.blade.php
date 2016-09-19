@@ -58,6 +58,19 @@
                             </div>
                         </div>
 
+                        @if (Auth::user()->privilege != 'Maestra')
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Maestra</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="teacher">
+                                        @foreach ($teachers as $teacher)
+                                            <option value=" {{ $teacher->id }} ">{{ $teacher->first_name.' '.$teacher->last_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif  
+
                         <div class="form-group">
                             <label for="max_num" class="col-md-4 control-label">Max. alumnas</label>
                             <div class="col-md-6">

@@ -87,13 +87,25 @@
                 <hr>
                 <div class="panel-body">
                     @if (Auth::user()->privilege === 'admin')
-                        <a href="{{ url('/user/'.$user->id.'/package') }}" class="new-btn">Agregar paquetes</a><br><br>
+                        <a href="{{ url('/user/'.$user->id.'/package') }}" class="new-btn">Agregar paquetes</a>
+                        <a href="{{ url('/user/'.$user->id.'/edit') }}" class="new-btn">Editar usuario</a><br><br>
                     @endif
                     <p><b>Email:</b> {{ $user->email }} </p>
                     <p><b>Teléfono:</b> {{ $user->phone }} </p>
-                    <p><b>Clases disponibles:</b> {{ $user->available_lessons }} </p>
+                    <p>
+                        <b>Clases regulares disponibles:</b> {{ $user->available_lessons }}. 
+                        @if ($user->available_lessons != 0)
+                            Vencen el: {{ $user->lesson_expire }}
+                        @endif
+                    </p>
+                    <p>
+                        <b>Clases de pole disponibles:</b> {{ $user->pole_lessons }}. 
+                        @if ($user->pole_lessons != 0) 
+                            Vencen el: {{ $user->pole_expire }}
+                        @endif
+                    </p>
                     @if (Auth::user()->privilege === 'admin')
-                    <p><b>Privilegios:</b> {{ $user->privilege }} </p>
+                        <p><b>Privilegios:</b> {{ $user->privilege }} </p>
                     @endif
                 </div>
             </div>
