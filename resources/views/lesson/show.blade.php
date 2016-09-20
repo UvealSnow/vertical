@@ -42,8 +42,39 @@
                 <div class="panel-heading">{{ $lesson->name.' - '.$lesson->desc }} </div>
             </div>
             <div class="panel panel-body">
+                @if ($user->privilege === 'admin' || $user->privilege === 'Maestra')
+                    <div class="col-md-12">
+                        <h4>Renovar clase</h4>
+
+                        <form action=" {{ url('/lesson/'.$lesson->id.'/renew') }} " method="POST" class="form-horizontal">
+                            {{ csrf_field() }}
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Tiempo</label>
+                                <div class="col-md-8">
+                                    <select class="form-control" name="time">
+                                        <option value="1">+1 Mes</option>
+                                        <option value="2">+2 Mes</option>
+                                        <option value="3">+3 Mes</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="col-md-2 col-md-offset-8">
+                                    <button class="btn btn-primary"> Renovar </button>    
+                                </div>
+                            </div>
+                            
+                        </form>
+
+                    </div>
+                    <hr>
+                @endif
+
                 <h4>Maestra: {{ $lesson->teacher->first_name.' '.$lesson->teacher->last_name }}</h4> <br>
                 
+                {{-- to do: filtrado de días¿ --}}
+
                 @if (($lesson->use_poles && $user->pole_lessons > 0) || (!$lesson->use_poles && $user->available_lessons > 0))
                     <p>Selecciona las clases a las cuales quieras inscribirte</p><br>
                     <h4>Classes disponibles:</h4><br>
@@ -54,18 +85,23 @@
                             <div class="col-md-8">
                                 @foreach ($lesson->days as $i => $day)
                                     {{-- If not currently enrolled and lesson has space --}}
-                                    @if (!$user->lessons->contains($day->pivot->id) && $day->pivot->enrolled < $lesson->max_students) 
-                                        <label> <input type="checkbox" name="days[{{ $i }}][day]" value="{{ $day->pivot->id }}"> {{ date('d-m-Y', strtotime($day->pivot->date)).' ('.$lesson->begins.' - '.$lesson->ends.') '.$day->pivot->enrolled.'/'.$lesson->max_students }} </label> <br>
+                                    @if (!in_array($day->pivot->id, $enrolled) 
+                                        && $day->pivot->enrolled < $lesson->max_students
+                                        && $day->pivot->day < date('d-m-Y')) 
+                                        <label> <input type="checkbox" name="days[{{ $i }}][day]" value="{{ $day->pivot->id }}"> {{ date('l d, F', strtotime($day->pivot->date)).' ('.$lesson->begins.'hrs - '.$lesson->ends.'hrs) '.$day->pivot->enrolled.'/'.$lesson->max_students }} </label> <br><br>
                                         {{-- display a way to choose the pole --}}
                                         @if ($lesson->use_poles)
                                             @for ($j = 1; $j <= 7; $j++)
                                                 {{-- if pole is not busy --}}
-                                                    <label> <input type="radio" name="days[{{ $i }}][pole]" value="{{ $j }}"> Pole {{ $j }} </label>
+                                                    <label> <input type="radio" name="days[{{ $i }}][pole]" value="{{ $j }}"> Pole {{ $j }} </label> <br><br>
                                                 {{-- else --}}
                                                 {{-- endif --}}
                                             @endfor
                                             <br><br>
                                         @endif
+                                    @else   
+                                        <label> <input disabled type="checkbox" name="days[{{ $i }}][day]" value="{{ $day->pivot->id }}"> {{ date('l d, F', strtotime($day->pivot->date)).' ('.$lesson->begins.'hrs - '.$lesson->ends.'hrs) '.$day->pivot->enrolled.'/'.$lesson->max_students }} </label> <br><br>
+                                        <p>Ya estás inscrita en esta clase</p>
                                     @endif
                                 @endforeach
                             </div>
@@ -77,7 +113,7 @@
                         </div>
                     </form>
                 @else
-                    <p>Necesitas más créditos para inscribirte. <a href="#">Compra más.</a></p>
+                    <p>Necesitas más créditos para inscribirte. <a href=" {{ url('/package') }} ">Compra más.</a></p>
                 @endif
                 <hr>
             </div>

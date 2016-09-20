@@ -53,12 +53,16 @@
                     <span class="class-set">
                         <b>Precio del Paquete:</b>$ {{ $package->cost }}.00<br><br>
                     </span>
-                    <span class="class-set">
-                	    @if ($package->is_pole) <b>Clases de pole incluidas:</b>
-                        @else <b>Clases incluidas:</b>
-                        @endif
-                        {{ $package->lessons }}<br><br>
-                    </span>
+                    @if ($package->pole_lessons > 0)
+                        <span class="class-set">
+                    	   <b>Clases de pole incluidas: </b>{{ $package->pole_lessons }} <br><br>
+                        </span>
+                    @endif
+                    @if ($package->regular_lessons > 0)
+                        <span class="class-set">
+                            <b>Clases incluidas: </b>{{ $package->regular_lessons }} <br><br>
+                        </span>
+                    @endif
                 </div>
             </div>
         </div>

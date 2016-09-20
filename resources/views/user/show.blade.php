@@ -121,7 +121,7 @@
                             <p>Profesor: {{ $lesson[0]->teacher->first_name }}</p> <br>
                             <p>Horario: </p><br>
                             @foreach ($lesson[0]->schedule as $schedule)
-                                <p>{{ $schedule->name.' '.$schedule->date.' de '.$lesson[0]->begins.' a '.$lesson[0]->ends }}</p>
+                                <p>{{ $schedule->name.' '.date(' d, F', strtotime($schedule->date)).' de '.$lesson[0]->begins.'hrs a '.$lesson[0]->ends.'hrs' }}</p>
                                 @if ($lesson[0]->use_poles)
                                     <p>Pole: {{ $schedule->pole_id }}</p><br><br>
                                 @endif

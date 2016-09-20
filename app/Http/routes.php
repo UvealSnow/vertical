@@ -41,6 +41,7 @@ Route::resource('package', 'PackageController');
 
 Route::get('/lesson/pole', 'LessonController@placeForm');
 Route::post('/lesson/{id}/enroll', 'LessonController@enrollUser');
+Route::post('/lesson/{id}/renew', 'LessonController@renewLesson');
 Route::resource('lesson', 'LessonController');
 
 Route::get('/user/{id}/package', 'UserController@showAddForm');

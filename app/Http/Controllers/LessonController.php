@@ -106,11 +106,18 @@ class LessonController extends Controller
     public function show(Request $request, $id) {
 
         $user = $request->user();
+        $user->lessons = $user->lessons()->where('lesson_id', $id)->get();
         $lesson = Lesson::find($id);
+        $enrolled = array();
+
+        foreach ($user->lessons as $lesson) {
+            $enrolled[] = $lesson->pivot->day_id;
+        }
 
         return view('lesson.show', [
             'user' => $user,
             'lesson' => $lesson,
+            'enrolled' => $enrolled,
         ]);
 
     }
@@ -238,6 +245,45 @@ class LessonController extends Controller
             'lesson' => $lesson,
             'used' => $used,
         ]);
+    }
+
+    public function renewLesson (Request $request, $id) {
+
+        $user = $request->user();
+        $lesson = Lesson::find($id);
+
+        if ($user->privilege === 'admin' || $user->privilege === 'Maestra') {
+
+            $lesson->unique = DB::table('day_lesson')->select('day_id')->distinct()->get(); # get unique day ids
+
+            for ($i=0; $i < $request->time ; $i++) { # repeat for each month
+                $lesson->max = date('d-m-Y', strtotime($lesson->days()->max('date'))); # get max date
+
+                foreach ($lesson->unique as $j => $day) {
+
+                    # create 1 month of classes starting from closest day next week
+                    if (intval($day->day_id) == 1)     $start = date('d-m-Y', strtotime('next monday', strtotime($lesson->max)));
+                    elseif (intval($day->day_id) == 2) $start = date('d-m-Y', strtotime('next tuesday', strtotime($lesson->max)));
+                    elseif (intval($day->day_id) == 3) $start = date('d-m-Y', strtotime('next wednesday', strtotime($lesson->max)));
+                    elseif (intval($day->day_id) == 4) $start = date('d-m-Y', strtotime('next thursday', strtotime($lesson->max)));
+                    elseif (intval($day->day_id) == 5) $start = date('d-m-Y', strtotime('next friday', strtotime($lesson->max)));
+                    elseif (intval($day->day_id) == 6) $start = date('d-m-Y', strtotime('next saturday', strtotime($lesson->max)));
+                    elseif (intval($day->day_id) == 7) $start = date('d-m-Y', strtotime('next sunday', strtotime($lesson->max)));
+
+                    $lesson->days()->attach($day, ['enrolled' => 0, 'date' => $start]);
+                    $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +7 days'))]);
+                    $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +14 days'))]);
+                    $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +21 days'))]);
+
+                    return redirect ('/lesson/'.$lesson->id);
+
+                }
+            }
+            
+           # var_dump($lesson->unique[0]->day_id);
+        }
+        else return redirect ('/lesson/'.$lesson->id);
+
     }
 
 }
