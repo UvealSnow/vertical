@@ -88,6 +88,7 @@
                 <div class="panel-body">
                     @if (Auth::user()->privilege === 'admin')
                         <a href="{{ url('/user/'.$user->id.'/package') }}" class="new-btn">Agregar paquetes</a>
+                        <a href="{{ url('/user/'.$user->id.'/medal') }}" class="new-btn">Otorgar medallas</a>
                         <a href="{{ url('/user/'.$user->id.'/edit') }}" class="new-btn">Editar usuario</a><br><br>
                     @endif
                     <p><b>Email:</b> {{ $user->email }} </p>
@@ -116,15 +117,20 @@
                 <div class="panel-heading"> Mis Clases</div>
                 <div class="panel-body">
                     @if (count($user->lessons) > 0)
-                        @foreach ($user->lessons as $i => $lesson)
-                            <p class="section__title">{{ $lesson[0]->name.': '.$lesson[0]->desc }}</p><br>
-                            <p>Profesor: {{ $lesson[0]->teacher->first_name }}</p> <br>
-                            <p>Horario: </p><br>
-                            @foreach ($lesson[0]->schedule as $schedule)
-                                <p>{{ $schedule->name.' '.date(' d, F', strtotime($schedule->date)).' de '.$lesson[0]->begins.'hrs a '.$lesson[0]->ends.'hrs' }}</p>
-                                @if ($lesson[0]->use_poles)
-                                    <p>Pole: {{ $schedule->pole_id }}</p><br><br>
+                        @foreach ($user->lessons as $i => $class)
+                            <h1>{{ $class[0]->name }}</h1> <hr>
+                            @foreach ($class as $j => $lesson)
+                                @if (count($lesson->schedule) > 0)
+                                    @foreach ($lesson->schedule as $schedule)
+                                        @if (date('z', strtotime('now')) <= date('z', strtotime($schedule->date)))
+                                            <p>{{ $schedule->name }} {{ date('d, M', strtotime($schedule->date)) }} de {{ $class[0]->begins }}hrs a {{ $class[0]->ends }}hrs</p>
+                                            @if ($schedule->pole_id != 0) <p>Pole: {{ $schedule->pole_id }}</p> <br>
+                                            @else <br> @endif
+                                        @endif 
+                                    @endforeach
                                 @endif
+                                {{-- <p>{{ $lesson->name }}</p> <br> --}}
+                                
                             @endforeach
                         @endforeach
                     @else

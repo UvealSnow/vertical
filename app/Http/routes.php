@@ -36,6 +36,7 @@ Route::get('/aerobics', function () {
 });
 
 Route::resource('medal', 'MedalController');
+
 Route::resource('package', 'PackageController');
 
 
@@ -49,6 +50,8 @@ Route::post('/user/package', 'UserController@addPackage');
 Route::get('/user/list', 'UserController@listUsers');
 Route::get('/user/profile', 'UserController@userProfile');
 Route::post('/user/profile', 'UserController@userShow');
+Route::get('/user/{uid}/medal', 'UserController@medalForm');
+Route::post('/user/{uid}/medal', 'UserController@giveMedal');
 Route::resource('user', 'UserController');
 
 Route::auth();

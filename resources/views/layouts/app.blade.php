@@ -169,6 +169,7 @@
                                          <div ng-bind-html="person.first_name + ' ' + person.last_name | highlight: $select.search"></div>
                                          <small>
                                             Email: <span ng-bind-html="person.email | highlight: $select.search"></span>
+                                            Rol: <span ng-bind-html="person.role"></span>
                                          </small>
                                       </ui-select-choices>
                                    </ui-select>

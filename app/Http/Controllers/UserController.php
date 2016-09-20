@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
 use App\Package;
+use App\Medal;
 use DB;
 
 class UserController extends Controller
@@ -66,13 +67,14 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
+
         $user = User::find($id);
 
         return view('user.show', [
             'user' => $user,
         ]);
+
     }
 
     /**
@@ -193,4 +195,59 @@ class UserController extends Controller
         return redirect ('/user/'.$request->user_id);
     }
 
+    public function medalForm (Request $request, $uid) {
+
+        $user = $request->user();
+
+        if ($user->privilege === 'admin' || $user->privilege === 'Maestra') {
+
+            $alumn = User::find($uid);
+            $medals = Medal::all();
+
+            return view ('user.medals', [
+                'alumn' => $alumn,
+                'medals' => $medals,
+            ]);
+
+        }
+        else return redirect ('/user/'.$uid);
+
+    }
+
+    public function giveMedal (Request $request, $uid) {
+
+        $user = $request->user();
+
+        if ($user->privilege === 'admin' || $user->privilege === 'Maestra') {
+
+            $alumn = User::find($uid);
+            $medal = Medal::find($request->medal_id);
+
+            $alumn->medals()->save($medal);
+
+            return redirect ('/user/'.$uid);
+
+        }
+        else return redirect ('/user/'.$uid);
+
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
