@@ -39,7 +39,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $lesson->name.' - '.$lesson->desc }} </div>
+                <div class="panel-heading">{{ $lesson->name }} </div>
             </div>
             <div class="panel panel-body">
                 @if ($user->privilege === 'admin' || $user->privilege === 'Maestra')

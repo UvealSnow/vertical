@@ -52,13 +52,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="desc" class="col-md-4 control-label">Descripción</label>
-                            <div class="col-md-6">
-                                <input id="desc" type="text" class="form-control" name="desc" placeholder="Descripción" value="{{ $lesson->desc }}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
                             <label for="max_num" class="col-md-4 control-label">Max. alumnas</label>
                             <div class="col-md-6">
                                 <input id="max_num" type="number" class="form-control" name="max_num" min="1" placeholder="Máximo número de estudiantes" value="{{ $lesson->max_students }}">

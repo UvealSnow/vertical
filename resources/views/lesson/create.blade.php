@@ -51,13 +51,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="desc" class="col-md-4 control-label">Descripción</label>
-                            <div class="col-md-6">
-                                <input id="desc" type="text" class="form-control" name="desc" placeholder="Descripción de la clase" value="{{ old('desc') }}" required>
-                            </div>
-                        </div>
-
                         @if (Auth::user()->privilege != 'Maestra')
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Maestra</label>

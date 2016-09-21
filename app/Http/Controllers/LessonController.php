@@ -61,7 +61,7 @@ class LessonController extends Controller
         $lesson = new Lesson;
 
         $lesson->name = $request->input('name');
-        $lesson->desc = $request->input('desc');
+        #$lesson->desc = $request->input('desc');
         $lesson->max_students = $request->input('max_num');
 
         if ($request->input('type') === 'pole') $lesson->use_poles = true;
