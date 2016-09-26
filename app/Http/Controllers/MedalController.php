@@ -9,9 +9,6 @@ use App\Medal;
 
 class MedalController extends Controller
 {
-    public function __contruct () {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -45,18 +42,27 @@ class MedalController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        # var_dump($request->input()['name']);
-        $medal = new Medal;
+    public function store(Request $request) {
+        
+        $user = $request->user();
 
-        $medal->name = $request->name;
-        $medal->desc = $request->desc;
-        $medal->img = $request->img;
+        if ($user === NULL || $user->privilege != 'admin') return redirect ('medal.index');
+        else {
+            $medal = new Medal;
 
-        $medal->save();
+            $imgName = $this->generateKey().'.'.$request->file('img')->getClientOriginalExtension();
 
-        return redirect('/medal');
+            $medal->name = $request->name;
+            $medal->desc = $request->desc;
+            $medal->img = $imgName;
+
+            $request->file('img')->move(base_path().'/public/assets/images/medals', $imgName);
+
+            $medal->save();
+
+            return redirect('/medal/'.$medal->id);
+        }
+
     }
 
     /**
@@ -120,4 +126,14 @@ class MedalController extends Controller
         $medal->delete();
         return redirect('/medal');
     }
+
+    public function generateKey ($length = 32, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+        $str = '';
+        $max = mb_strlen($keyspace, '8bit') - 1;
+        for ($i = 0; $i < $length; ++$i) {
+            $str .= $keyspace[random_int(0, $max)];
+        }
+        return $str;
+    }
+
 }

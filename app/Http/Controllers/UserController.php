@@ -70,6 +70,23 @@ class UserController extends Controller
     public function show($id) {
 
         $user = User::find($id);
+        $user->lessons = $user->lessons->groupBy('name');
+
+        foreach ($user->lessons as $lesson) {
+
+            $lesson[0]['schedule'] = $lessons = DB::table('lessons')
+            ->select('lessons.id', 'lessons.name', 'lesson_user.pole_id', 'day_lesson.date', 'lessons.begins', 'lessons.ends')
+            ->groupBy('lessons.id', 'lessons.name', 'lesson_user.pole_id', 'day_lesson.date')
+            ->join('lesson_user', 'lessons.id', '=', 'lesson_user.lesson_id')
+            ->join('day_lesson', 'lesson_user.day_id', '=', 'day_lesson.id')
+            ->where('lesson_user.user_id', $user->id)
+            ->where('lesson_user.lesson_id', $lesson[0]['id'])
+            ->get();
+
+            /*echo '<pre>';
+            var_dump($lesson[0]['schedule']);
+            echo '</pre>';*/
+        }
 
         return view('user.show', [
             'user' => $user,
@@ -162,27 +179,29 @@ class UserController extends Controller
     }
 
     public function listUsers () {
-        $users = DB::table('users')->whereNotIn('privilege', ['admin'])->get();
+        $users = DB::table('users')->select('id', 'email', 'first_name', 'last_name', 'privilege')->whereNotIn('privilege', ['admin'])->get();
         return response()->json($users);
     }
 
     public function userProfile (Request $request) {
-        $user = User::find($request->user()->id);
-        $user->lessons = $user->lessons->groupBy('id');
+
+        $user = $request->user();
+        $user->lessons = $user->lessons->groupBy('name');
 
         foreach ($user->lessons as $lesson) {
-            $lesson[0]->schedule = DB::table('lesson_user')
+
+            $lesson[0]['schedule'] = $lessons = DB::table('lessons')
+            ->select('lessons.id', 'lessons.name', 'lesson_user.pole_id', 'day_lesson.date', 'lessons.begins', 'lessons.ends')
+            ->groupBy('lessons.id', 'lessons.name', 'lesson_user.pole_id', 'day_lesson.date')
+            ->join('lesson_user', 'lessons.id', '=', 'lesson_user.lesson_id')
             ->join('day_lesson', 'lesson_user.day_id', '=', 'day_lesson.id')
-            ->join('days', 'day_lesson.day_id', '=', 'days.id')
-            ->select('*')
             ->where('lesson_user.user_id', $user->id)
-            ->where('lesson_user.lesson_id', $lesson[0]->id)
+            ->where('lesson_user.lesson_id', $lesson[0]['id'])
             ->get();
 
             /*echo '<pre>';
-            var_dump($lesson[0]->schedule);
+            var_dump($lesson[0]['schedule']);
             echo '</pre>';*/
-            
         }
 
         return view('user.show', [

@@ -19,6 +19,7 @@ app.controller('uiSearchCtrl', function ($scope, $http, $timeout, $interval) {
    			url: '/user/list'
    		}).then(function (res) {
    			vm.people = res.data;
+   			// console.log(vm.people);
    		});
    	}
    	

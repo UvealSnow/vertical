@@ -123,7 +123,7 @@
                     <!-- Authentication Links -->
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Register</a></li>
+                        <li><a href="{{ url('/register') }}">Registro</a></li>
                     @elseif (Auth::user()->privilege === 'admin')
                         <li><a href="{{ url('/user') }}">Usuarios</a></li>
                         <li><a href="{{ url('/package') }}">Paquetes</a></li>
@@ -151,7 +151,7 @@
         </div>
     </nav>
 
-    @if (Auth::user())
+    @if (!Auth::guest() && Auth::user()->privilege != 'Alumna')
         <div class="container" ng-controller="uiSearchCtrl as ctrl">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
@@ -169,7 +169,7 @@
                                          <div ng-bind-html="person.first_name + ' ' + person.last_name | highlight: $select.search"></div>
                                          <small>
                                             Email: <span ng-bind-html="person.email | highlight: $select.search"></span>
-                                            Rol: <span ng-bind-html="person.role"></span>
+                                            Rol: <span ng-bind-html="person.privilege"></span>
                                          </small>
                                       </ui-select-choices>
                                    </ui-select>

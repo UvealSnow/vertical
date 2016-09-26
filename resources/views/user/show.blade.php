@@ -117,24 +117,15 @@
                 <div class="panel-heading"> Mis Clases</div>
                 <div class="panel-body">
                     @if (count($user->lessons) > 0)
-                        @foreach ($user->lessons as $i => $class)
-                            <h1>{{ $class[0]->name }}</h1> <hr>
-                            @foreach ($class as $j => $lesson)
-                                @if (count($lesson->schedule) > 0)
-                                    @foreach ($lesson->schedule as $schedule)
-                                        @if (date('z', strtotime('now')) <= date('z', strtotime($schedule->date)))
-                                            <p>{{ $schedule->name }} {{ date('d, M', strtotime($schedule->date)) }} de {{ $class[0]->begins }}hrs a {{ $class[0]->ends }}hrs</p>
-                                            @if ($schedule->pole_id != 0) <p>Pole: {{ $schedule->pole_id }}</p> <br>
-                                            @else <br> @endif
-                                        @endif 
-                                    @endforeach
-                                @endif
-                                {{-- <p>{{ $lesson->name }}</p> <br> --}}
-                                
+                        @foreach ($user->lessons as $lesson)
+                            <h1>{{ $lesson[0]['name'] }}</h1><br>
+                            @foreach ($lesson[0]['schedule'] as $class)
+                                <p>{{ strftime('%A %d %B', strtotime($class->date)) }} de {{ $class->begins }}hrs a {{ $class->ends }}hrs</p><br>
                             @endforeach
+                            <hr>
                         @endforeach
                     @else
-                        <p>No hay clases inscritas</p><hr>
+                        <p>No hay clases inscritas</p>
                     @endif
                     </div>
                     </div>
@@ -145,10 +136,25 @@
                 <div class="panel-heading"> Mis Medallas</div>
                     <div class="panel-body">
                     @if (count($user->medals) > 0)
+
+                        <div id="fb-root"></div>
+                        <script>(function(d, s, id) {
+                            var js, fjs = d.getElementsByTagName(s)[0];
+                            if (d.getElementById(id)) return;
+                            js = d.createElement(s); js.id = id;
+                            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));</script>
+
                         @foreach ($user->medals as $medal)
                             <div class="medal">
+                                <img src="/assets/images/medals/{{ $medal->img }}" style="width: 50px; height: 50px; display: block; margin: 5px auto;">
                                 <p class="section__title">{{ $medal->name }}</p>
                                 <p>{{ $medal->desc }}</p>
+                                <div style="display: block !important; text-align: center; margin-top: 15px;" class="fb-share-button" 
+                                    data-href="http://www.verticalfit.mx/medal/{{ $medal->id }}" 
+                                    data-layout="button">
+                                </div>
                             </div>
                         @endforeach
                     @else 
