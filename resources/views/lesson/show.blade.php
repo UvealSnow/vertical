@@ -83,27 +83,20 @@
                             {{ csrf_field() }}
                             <label class="col-md-2 control-label">Días</label>
                             <div class="col-md-8">
-                                @foreach ($lesson->days as $i => $day)
-                                    {{-- If not currently enrolled and lesson has space --}}
-                                    @if (!in_array($day->pivot->id, $enrolled) 
-                                        && $day->pivot->enrolled < $lesson->max_students
-                                        && $day->pivot->day < date('d-m-Y')) 
-                                        <label> <input type="checkbox" name="days[{{ $i }}][day]" value="{{ $day->pivot->id }}"> {{ date('l d, F', strtotime($day->pivot->date)).' ('.$lesson->begins.'hrs - '.$lesson->ends.'hrs) '.$day->pivot->enrolled.'/'.$lesson->max_students }} </label> <br><br>
-                                        {{-- display a way to choose the pole --}}
-                                        @if ($lesson->use_poles)
-                                            @for ($j = 1; $j <= 7; $j++)
-                                                {{-- if pole is not busy --}}
-                                                    <label> <input type="radio" name="days[{{ $i }}][pole]" value="{{ $j }}"> Pole {{ $j }} </label> <br><br>
-                                                {{-- else --}}
-                                                {{-- endif --}}
-                                            @endfor
-                                            <br><br>
-                                        @endif
-                                    @else   
-                                        <label> <input disabled type="checkbox" name="days[{{ $i }}][day]" value="{{ $day->pivot->id }}"> {{ date('l d, F', strtotime($day->pivot->date)).' ('.$lesson->begins.'hrs - '.$lesson->ends.'hrs) '.$day->pivot->enrolled.'/'.$lesson->max_students }} </label> <br><br>
-                                        <p>Ya estás inscrita en esta clase</p>
-                                    @endif
-                                @endforeach
+                                <select name="day" class="form-control">
+                                    @foreach ($lesson->days as $day)
+                                        <option value="{{ $day->pivot->id }}">
+                                            {{ date('l d, F', strtotime($day->pivot->date)).' ('.$lesson->begins.'hrs - '.$lesson->ends.'hrs) '.$day->pivot->enrolled.'/'.$lesson->max_students }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <br>
+                                @if ($lesson->use_poles)
+                                    @for ($j = 1; $j <= 7; $j++)
+                                        <label> <input type="radio" name="pole_id" value="{{ $j }}"> Pole {{ $j }} </label> <br><br>
+                                    @endfor
+                                    <br><br>
+                                @endif
                             </div>
                         </div>
                         <div class="form-group">

@@ -203,25 +203,17 @@ class LessonController extends Controller
 
         $user = $request->user();
         $lesson = Lesson::find($id);
-        $days = $request->input('days');
+        $day = $request->day;
 
-        if (($lesson->use_poles && $user->pole_lessons >= count($days)) || 
-            (!$lesson->use_poles && $user->available_lessons >= count($days))) {
-            foreach ($days as $day) {
-                if (isset($day['pole'])) $user->lessons()->attach($id, ['pole_id' => $day['pole'], 'day_id' => $day['day']]);
-                else $user->lessons()->attach($id, ['pole_id' => 0, 'day_id' => $day['day']]);
-
-                # take away one credit
-                if ($lesson->use_poles) $user->pole_lessons--;
-                else $user->available_lessons--;
-                $user->save();
-
-                # uodate day_lesson enrolled
-                $enrolled = $lesson->days($day['day'])->first()->pivot->enrolled + 1;
-                DB::table('day_lesson')->where('id', $day['day'])->update(['enrolled' => $enrolled]);
-            }
-        }
+        if ($lesson->use_poles) $user->lessons()->attach($id, ['pole_id' => $request->pole_id, 'day_id' => $request->day]);
+        else $user->lessons()->attach($id, ['day_id' => $request->day]);
         
+        if ($lesson->use_poles) $user->pole_lessons--;
+        else $user->available_lessons--;
+        $user->save();
+
+        $enrolled = $lesson->days($day)->first()->pivot->enrolled + 1;
+        DB::table('day_lesson')->where('id', $day)->update(['enrolled' => $enrolled]);
 
         return redirect('/lesson');
         
