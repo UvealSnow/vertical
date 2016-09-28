@@ -39,7 +39,8 @@ Route::resource('medal', 'MedalController');
 
 Route::resource('package', 'PackageController');
 
-
+Route::get('/registered/{did}', 'LessonController@enrolledUsers');
+Route::get('/poles/{did}', 'LessonController@poleStatus');
 Route::get('/lesson/pole', 'LessonController@placeForm');
 Route::post('/lesson/{id}/enroll', 'LessonController@enrollUser');
 Route::post('/lesson/{id}/renew', 'LessonController@renewLesson');

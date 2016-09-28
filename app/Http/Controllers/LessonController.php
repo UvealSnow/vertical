@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Lesson;
 use App\Pole;
@@ -55,7 +55,7 @@ class LessonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store (Request $request) {
 
         $user = $request->user();
         $lesson = new Lesson;
@@ -103,7 +103,7 @@ class LessonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id) {
+    public function show (Request $request, $id) {
 
         $user = $request->user();
         $user->lessons = $user->lessons()->where('lesson_id', $id)->get();
@@ -128,15 +128,35 @@ class LessonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id) {
+    public function edit (Request $request, $id) {
         $user =  $request->user();
         if ($user->privilege != 'admin' && $user->privilege != 'Maestra') { # user does not have privilege to modify
             return redirect('/lesson')->withErrors(['msg', 'No tienes privilegios para modificar esta clase']);
         }
         else { # user is either admin or teacher
+            $teachers = User::where('privilege', 'Maestra')->get();
             $lesson = Lesson::find($id);
+
+            $days_query = DB::table('lessons')
+                    ->join('day_lesson', 'day_lesson.lesson_id', '=', 'lessons.id')
+                    ->join('days', 'days.id', '=', 'day_lesson.day_id')
+                    ->select('days.id')
+                    ->where('lessons.id', $lesson->id)
+                    ->distinct()
+                    ->orderBy('days.id')
+                    ->get();
+
+            $days = [];
+            foreach ($days_query as $day) {
+                $days[] = $day->id;
+            }
+
+            # var_dump($days);
+
             if ($user->id == $lesson->creator_id || $user->privilege === 'admin') {
                 return view('lesson.edit', [
+                    'days' => $days,
+                    'teachers' => $teachers,
                     'lesson' => $lesson,
                 ]);
             }
@@ -153,9 +173,71 @@ class LessonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update (Request $request, $id) {
+
+        $user = Auth::user();
+
+        if (in_array($user->privilege, ['admin', 'Maestra'])) {
+            
+            $lesson = Lesson::find($id);
+
+            $lesson->name = $request->name;
+            $lesson->teacher_id = $request->teacher;
+            $lesson->begins = $request->starts;
+            $lesson->ends = $request->ends;
+            if ($request->type != 'pole') $lesson->use_poles = false;
+            else $lesson->use_poles = true;
+
+            #$lesson->save();
+
+            # gets users that were affected by the change and gives them back the credits
+            $users = DB::table('lessons') 
+                        ->join('lesson_user', 'lesson_user.lesson_id', '=', 'lessons.id')
+                        ->join('users', 'users.id', '=', 'lesson_user.user_id')
+                        ->select('users.id')
+                        ->where('lessons.id', $id)
+                        ->get();
+
+            # var_dump($users);
+
+            if (count($users) > 0) {
+                foreach ($users as $affected) {
+                    $usr = User::find($affected->id);
+
+                    if ($usr != NULL) {
+                        if ($lesson->use_poles) $usr->pole_lessons++;
+                        else $usr->available_lessons++;
+                        $usr->save();
+                    }
+
+                }
+            }
+
+            DB::table('day_lesson')->where('lesson_id', $lesson->id)->delete();
+
+            
+            foreach ($request->days as $day) {
+                $today = date('d-m-Y');
+                # create 1 month of classes starting from closest day next week
+                if (intval($day) == 1) $start = date('d-m-Y', strtotime('next monday'));
+                elseif (intval($day) == 2) $start = date('d-m-Y', strtotime('next tuesday'));
+                elseif (intval($day) == 3) $start = date('d-m-Y', strtotime('next wednesday'));
+                elseif (intval($day) == 4) $start = date('d-m-Y', strtotime('next thursday'));
+                elseif (intval($day) == 5) $start = date('d-m-Y', strtotime('next friday'));
+                elseif (intval($day) == 6) $start = date('d-m-Y', strtotime('next saturday'));
+                elseif (intval($day) == 7) $start = date('d-m-Y', strtotime('next sunday'));
+
+                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => $start]);
+                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +7 days'))]);
+                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +14 days'))]);
+                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +21 days'))]);
+            }
+
+            return redirect ('/lesson/'.$id);
+
+        }
+        else return redirect ('/lesson/'.$id);
+
     }
 
     /**
@@ -164,10 +246,36 @@ class LessonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy ($id) {
         $lesson = Lesson::find($id);
-        $lesson->destroy();
+
+        # gets users that were affected by the change and gives them back the credits
+        $users = DB::table('lessons') 
+                    ->join('lesson_user', 'lesson_user.lesson_id', '=', 'lessons.id')
+                    ->join('users', 'users.id', '=', 'lesson_user.user_id')
+                    ->select('users.id')
+                    ->where('lessons.id', $id)
+                    ->get();
+
+        # var_dump($users);
+
+        if (count($users) > 0) {
+            foreach ($users as $affected) {
+                $usr = User::find($affected->id);
+
+                if ($usr != NULL) {
+                    if ($lesson->use_poles) $usr->pole_lessons++;
+                    else $usr->available_lessons++;
+                    $usr->save();
+                }
+
+            }
+        }
+
+        DB::table('lesson_user')->where('lesson_id', $lesson->id)->delete();
+        DB::table('day_lesson')->where('lesson_id', $lesson->id)->delete();
+
+        $lesson->delete();
         return redirect('/lesson');
     }
 
@@ -206,7 +314,7 @@ class LessonController extends Controller
         $day = $request->day;
 
         if ($lesson->use_poles) $user->lessons()->attach($id, ['pole_id' => $request->pole_id, 'day_id' => $request->day]);
-        else $user->lessons()->attach($id, ['day_id' => $request->day]);
+        else $user->lessons()->attach($id, ['pole_id' => 0, 'day_id' => $request->day]);
         
         if ($lesson->use_poles) $user->pole_lessons--;
         else $user->available_lessons--;
@@ -275,6 +383,29 @@ class LessonController extends Controller
            # var_dump($lesson->unique[0]->day_id);
         }
         else return redirect ('/lesson/'.$lesson->id);
+
+    }
+
+    public function enrolledUsers ($day_id) {
+
+        $users = DB::table('lesson_user')
+                    ->join('users', 'users.id', '=', 'lesson_user.user_id')
+                    ->select('users.id', 'users.first_name', 'users.last_name')
+                    ->where('lesson_user.day_id', $day_id)
+                    ->get();
+
+        return response()->json($users);
+
+    }
+
+    public function poleStatus ($day_id) {
+
+        $poles = DB::table('lesson_user')
+                    ->select('pole_id')
+                    ->where('day_id', $day_id)
+                    ->get();
+
+        return response()->json($poles);
 
     }
 
