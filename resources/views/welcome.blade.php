@@ -113,7 +113,7 @@
         <div class="c-cont">
             <div class="c-info">
                 <h2>¿Quieres inscribirte?</h2>
-                <p>Llama al <strong>(444) 581 2357</strong> o visítanos en nuestra dirección:</p>
+                <p>Llama al <strong>(444) 835 6030</strong> o visítanos en nuestra dirección:</p>
                 <p>
                     Av. Tercer Milenio #385<br>
                     San Luis Potosí, SLP.
@@ -147,13 +147,13 @@
     <div id="myModal" class="modal">
       <!-- Modal content -->
       <div class="modal-content animate">
-        <span class="close" onclick="closeModal();">&times;</span>
+        <span class="close" id="closeModal" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
         <h2>Déjanos un mensaje y pronto nos pondremos en contacto.</h2>
         <div class="contact-form">
             <form method="POST" action="https://formspree.io/contacto@verticalfit.mx">
-                <input type="text" placeholder="Nombre" required class="text-input" name="Nombre"/>
-                <input type="email" placeholder="E-mail" required class="text-input" name="Mail"/>
-                <textarea placeholder="Mensaje" rows="4" required class="text-input" name="Msj"></textarea> 
+                <input type="text" placeholder="Nombre" name="Nombre" required class="text-input" />
+                <input type="email" placeholder="E-mail" name="Mail" required class="text-input" />
+                <textarea placeholder="Mensaje" rows="4" name="Msj" required class="text-input" ></textarea> 
                 <input type="submit"  class="c-btn" value="Enviar"/>
                 <input type="hidden" name="_next" value="thanks.html" />
                 <input type="hidden" name="_subject" value="Nuevo Mensaje" />
