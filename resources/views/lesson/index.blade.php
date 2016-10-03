@@ -127,7 +127,7 @@
                                 <span class="lesson-dtl">
                                     <span>
                                         <a href="{{ url('/lesson/'.trim($lesson->id)) }}">{{ $lesson->name }}</a> con: 
-                                        <a href="{{ url('/lesson/'.trim($lesson->teacher_id)) }}">{{ $lesson->teacher->first_name }}</a>
+                                        <a href="{{ url('/user/'.trim($lesson->teacher_id)) }}">{{ $lesson->teacher->first_name }}</a>
                                     </span>
                                 </span>
                                 @if ($user->privilege === 'Maestra' || $user->privilege === 'admin')
