@@ -58,6 +58,8 @@ Route::resource('user', 'UserController');
 Route::auth();
 Route::get('/home', 'HomeController@index');
 
+Route::get('/usedPoles/{day_id}', 'JsonController@usedPoles');
+
 /*
 	GET	/photo	index	photo.index
 	GET	/photo/create	create	photo.create

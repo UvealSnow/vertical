@@ -5,6 +5,38 @@ var app = angular.module('verticalApp', ['ui.select', 'ngSanitize'],
 	}
 );
 
+app.controller('lessonCtrl', ['$scope', '$http', function ($scope, $http) {
+
+	$scope.day_id = document.getElementById('day_id').value;
+	$scope.user_id = document.getElementById('user_id').value;
+
+	$scope.$watch('day_id', function (newVal, oldVal) {
+		console.log('user_id: '+$scope.user_id);
+		console.log('variable changed to: '+$scope.day_id);
+		$scope.getPoles();
+		$scope.getEnrolled();
+	});
+
+	$scope.getPoles = function () {
+		$http({
+			'method': 'GET',
+			'url': '/usedPoles/'+$scope.day_id
+		}).then(function (res) {
+			$scope.poles = res.data;
+		});
+	}
+
+	$scope.getEnrolled = function () {
+		$http({
+			'method': 'GET',
+			'url': '/registered/'+$scope.day_id
+		}).then(function (res) {
+			$scope.enrolled = res.data;
+		});
+	}
+
+}]);
+
 app.controller('uiSearchCtrl', function ($scope, $http, $timeout, $interval) {
    	var vm = this;
 
