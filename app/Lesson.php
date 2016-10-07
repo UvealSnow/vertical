@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Lesson extends Model {
 
     public function schedule () {
-        return $this->belongsTo('App\Agenda');
+        return $this->belongsTo('App\Agenda', 'agenda_id');
     }
 
     public function user () {

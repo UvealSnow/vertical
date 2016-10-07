@@ -41,79 +41,66 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Nueva Clase</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/lesson/'.$lesson->id) }}">
-                        {{ csrf_field() }}
 
-                        <input type="hidden" name="_method" value="PUT">
+                    @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            @foreach ($errors->all() as $i => $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/lecture') }}">
+                        {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Nombre</label>
                             <div class="col-md-6">
-                                <input id="text" type="name" class="form-control" name="name" placeholder="Nombre de la clase" value="{{ $lesson->name }}" required>
+                                <input id="text" type="name" class="form-control" name="name" placeholder="Nombre de la clase" value="{{ $lecture->name }}" required>
                             </div>
                         </div>
 
-                        @if (Auth::user()->privilege != 'Maestra')
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">Maestra</label>
-                                <div class="col-md-6">
-                                    <select class="form-control" name="teacher">
-                                        @foreach ($teachers as $teacher)
-                                            @if ($teacher->id == $lesson->teacher_id)
-                                                <option value=" {{ $teacher->id }} " selected="selected">{{ $teacher->first_name.' '.$teacher->last_name }}</option>
-                                            @else
-                                                <option value=" {{ $teacher->id }} ">{{ $teacher->first_name.' '.$teacher->last_name }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Maestra</label>
+                            <div class="col-md-6">
+                                <select class="form-control" name="teacher_id">
+                                    @foreach ($teachers as $teacher)
+                                        @if ($teacher->id == $lecture->teacher_id)
+                                            <option value="{{ $teacher->id }}" selected="selected">
+                                                @if ($teacher->id == Auth::user()->id)
+                                                    Yo
+                                                @else
+                                                    {{ $teacher->name }}
+                                                @endif
+                                            </option>
+                                        @else
+                                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
                             </div>
-                        @endif  
+                        </div>
 
                         <div class="form-group">
                             <label for="max_num" class="col-md-4 control-label">Max. alumnas</label>
                             <div class="col-md-6">
-                                <input id="max_num" type="number" class="form-control" name="max_num" min="1" placeholder="Máximo número de estudiantes" value="{{ $lesson->max_students }}" required>
+                                <input id="max_num" type="number" class="form-control" name="max_num" min="1" placeholder="Máximo número de estudiantes" value="{{ $lecture->max_students }}" required>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Días</label>
-                            <div class="col-md-6">
-
-                                <label><input type="checkbox" name="days[1]" value="1" @if (in_array(1, $days)) checked @endif> Lunes </label> <br>
-                                <label><input type="checkbox" name="days[2]" value="2" @if (in_array(2, $days)) checked @endif> Martes </label> <br>
-                                <label><input type="checkbox" name="days[3]" value="3" @if (in_array(3, $days)) checked @endif> Miércoles </label> <br>
-                                <label><input type="checkbox" name="days[4]" value="4" @if (in_array(4, $days)) checked @endif> Jueves </label> <br>
-                                <label><input type="checkbox" name="days[5]" value="5" @if (in_array(5, $days)) checked @endif> Viernes </label> <br>
-                                <label><input type="checkbox" name="days[6]" value="6" @if (in_array(6, $days)) checked @endif> Sábado </label> <br>
-                                <label><input type="checkbox" name="days[7]" value="7" @if (in_array(7, $days)) checked @endif> Domingo </label>
-
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Horario</label>
-                            <div class="col-md-6">
-                                <p>Inicia</p> <br>
-                                <input class="form-control" type="time" name="starts" value="{{ $lesson->begins }}" required> <br>
-                                <p>Termina</p> <br>
-                                <input class="form-control" type="time" name="ends" value="{{ $lesson->ends }}" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
+                        <div class="radio">
                             <label class="col-md-4 control-label">Tipo de clase</label>
                             <div class="col-md-6">
-                                <label> <input type="radio" name="type" value="pole" @if ($lesson->use_poles) checked @endif> Pole </label> <br>
-                                <label> <input type="radio" name="type" value="other" @if (!$lesson->use_poles) checked @endif> Otras </label>
+                                <label> <input type="radio" name="type" value="pole" @if ($lecture->is_pole) checked @endif> Usa poles </label> <br>
+                                <label> <input type="radio" name="type" value="other" @if (!$lecture->is_pole) checked @endif> Otro tipo </label>
                             </div>
                         </div>
+                        <br><br>
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-sign-in"></i> Modificar
+                                    <i class="fa fa-btn fa-sign-in"></i> Editar
                                 </button>
                             </div>
                         </div>

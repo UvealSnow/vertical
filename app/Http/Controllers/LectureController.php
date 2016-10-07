@@ -34,7 +34,7 @@ class LectureController extends Controller {
      */
     public function create () {
         if (in_array(Auth::user()->role_id, [1, 2])) {
-            $teachers = DB::table('users')->where('role_id', 2)->get();
+            $teachers = $this->getTeachers();
             return view ('lecture.create', [
                 'teachers' => $teachers,
             ]);
@@ -96,9 +96,16 @@ class LectureController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id) {
+
+        $lecture = Lecture::find($id);
+        $teachers = $this->getTeachers();
+
+        return view ('lecture.edit', [
+            'teachers' => $teachers,
+            'lecture' => $lecture
+        ]);
+
     }
 
     /**
@@ -108,8 +115,7 @@ class LectureController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         //
     }
 
@@ -122,5 +128,10 @@ class LectureController extends Controller {
     public function destroy($id)
     {
         //
+    }
+
+    public function getTeachers () {
+        $teachers = DB::table('users')->where('role_id', 2)->get();
+        return $teachers;
     }
 }

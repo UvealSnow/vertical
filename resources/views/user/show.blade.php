@@ -65,9 +65,11 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                
-                <div class="panel-heading"> Mi Perfil</div>
-
+                @if (Auth::user()->id != $user->id)
+                    <div class="panel-heading">Perfil de usuario</div>
+                @else
+                    <div class="panel-heading">Mi Perfil</div>
+                @endif
                 <div class="pp-image">
                     @if (Auth::user()->role_id == 1)
                         <img src="/assets/admin.svg" alt="Administrador">
@@ -82,8 +84,7 @@
                         <img src="/assets/student.svg" alt="Alumna">
                     @endif
                 </div>
-
-                <h3 class="pp-name"> {{ $user->first_name.' '.$user->last_name }} </h3>
+                <h3 class="pp-name"> {{ $user->name }} </h3>
                 <hr>
                 <div class="panel-body">
                     @if (Auth::user()->role_id == 1)
@@ -94,19 +95,19 @@
                     <p><b>Email:</b> {{ $user->email }} </p>
                     <p><b>Teléfono:</b> {{ $user->phone }} </p>
                     <p>
-                        <b>Clases regulares disponibles:</b> {{ $user->available_lessons }}. 
-                        @if ($user->available_lessons != 0)
-                            Vencen el: {{ $user->lesson_expire }}
+                        <b>Clases regulares disponibles:</b> {{ $user->regular_lessons }}. 
+                        @if ($user->regular_lessons != 0)
+                            Vencen el: {{ date('d M', strtotime($user->regular_expire)) }}
                         @endif
                     </p>
                     <p>
                         <b>Clases de pole disponibles:</b> {{ $user->pole_lessons }}. 
                         @if ($user->pole_lessons != 0) 
-                            Vencen el: {{ $user->pole_expire }}
+                            Vencen el: {{ date('d M', strtotime($user->pole_expire)) }}
                         @endif
                     </p>
                     @if (Auth::user()->role_id == 1)
-                        <p><b>Privilegios:</b> {{ $user->role_id }} </p>
+                        <p>{{ $user->role->title }} </p>
                     @endif
                 </div>
             </div>
@@ -114,9 +115,8 @@
        
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                
                 <div class="panel-heading"> Mis Medallas</div>
-                    <div class="panel-body">
+                <div class="panel-body">
                     @if (count($user->medals) > 0)
 
                         <div id="fb-root"></div>
@@ -145,6 +145,34 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading"> Mis clases</div>
+                <div class="panel-body">
+                    @if (count($user->lessons) > 0)
+                        @foreach ($user->lessons as $lesson)
+                            @if (date('z') < date('z', strtotime($lesson->schedule->date)))
+                                <p>
+                                    {{ date('d M', strtotime($lesson->date)) }} - 
+                                    {{ $lesson->schedule->lecture->name }}: 
+                                    {{ $lesson->schedule->begins }}hrs a 
+                                    {{ $lesson->schedule->ends }}hrs
+                                    @if ($lesson->schedule->lecture->is_pole)
+                                        (pole: {{ $lesson->pole_id }})
+                                    @endif
+                                </p>
+                                <br>
+                            @endif
+                        @endforeach
+                    @else 
+                        <p>No hay clases registradas.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+
         </div>
     </div>
     <div class="row">

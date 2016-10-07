@@ -82,7 +82,7 @@
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Confirmar contraseña</label>
                             <div class="col-md-6">
-                                <input id="text" type="password" class="form-control" name="confirm_password" placeholder="Confirmar contraseña">
+                                <input id="text" type="password" class="form-control" name="password_confirmation" placeholder="Confirmar contraseña">
                             </div>
                         </div>
 
@@ -90,10 +90,10 @@
                             <label for="password" class="col-md-4 control-label">Tipo de usuario</label>
                             <div class="col-md-6">
                                 <select name="privilege" class="form-control">
-                                    <option value="Alumna">Alumna</option>
-                                    <option value="Maestra">Maestra</option>
-                                    <option value="Nutriologa">Nutrióloga</option>
-                                    <option value="admin">Admin</option>
+                                    <option value="4">Alumna</option>
+                                    <option value="2">Maestra</option>
+                                    <option value="3">Nutrióloga</option>
+                                    <option value="1">Admin</option>
                                 </select>
                             </div>
                         </div>

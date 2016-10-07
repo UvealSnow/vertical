@@ -74,48 +74,15 @@ class AgendaController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($lecture_id, $agenda_id) {
+        Agenda::find($agenda_id)->delete();
+        DB::table('lessons')->where('agenda_id', $agenda_id)->delete();
+        return redirect ("/lecture/$lecture->id");
     }
 
     public function enroll ($lecture_id, $agenda_id) {
@@ -141,7 +108,7 @@ class AgendaController extends Controller
         $lecture = Lecture::find($lecture_id);
         $agenda = Agenda::find($agenda_id);
 
-        if (count($this->enrolledUsers(urlencode($request->date))) < $lecture->max_students) {
+        if (count($this->enrolledUsers($agenda_id, $request->date)) < $lecture->max_students) {
             if ($lecture->is_pole && $user->pole_lessons > 0) $user->pole_lessons -= 1;
             elseif (!$lecture->is_pole && $user->regular_lessons > 0) $user->regular_lessons -= 1;
             else return redirect ("/lecture/$lecture_id");
@@ -155,7 +122,7 @@ class AgendaController extends Controller
             $lesson->save();
             $user->save();
 
-            return redirect ("/profile");
+            return redirect ("/user/profile");
 
         }
         else return redirect ("/lecture/$lecture_id");
@@ -203,4 +170,18 @@ class AgendaController extends Controller
         return $used_poles;
 
     }
+
+    public function enrolledUsers ($agenda_id, $date) {
+
+        $enrolled_users = DB::table('lessons')
+                            ->join('users', 'users.id', '=', 'lessons.user_id')
+                            ->select('users.id', 'users.name')
+                            ->where('lessons.agenda_id', $agenda_id)
+                            ->where('lessons.date', urldecode($date))
+                            ->get();
+
+        return $enrolled_users;
+
+    }
+
 }

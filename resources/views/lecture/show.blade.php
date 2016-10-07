@@ -191,10 +191,14 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <p>{{ $lesson->day }} de {{ $lesson->begins }}hrs a {{ $lesson->ends }}hrs</p>
-                                @if (Auth::user()->role_id)
+                                @if (Auth::user()->role_id == 4)
                                     <a href="{{ url("/lecture/$lecture->id/agenda/$lesson->id/enroll") }}" class="btn btn-primary">Incríbete</a>
-                                @else
-                                    
+                                @elseif (in_array(Auth::user()->role_id, [1, 2]))
+                                    <form action="{{ url("/lecture/$lecture->id/agenda/$lesson->id") }}" method="POST" style="display: inline-block;">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button class="btn btn-xs btn-danger">Eliminar</button>
+                                    </form>
                                 @endif  
                                 <br>
                             </div>

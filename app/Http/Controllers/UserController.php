@@ -43,17 +43,23 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store (Request $request)
-    {
+    public function store (Request $request) {
+
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
+            'privilege' => 'required|numeric',
+        ]);
+
         $user = new User;
 
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
-        $user->privilege = $request->privilege;
-        $user->available_lessons = 0;
+        $user->role_id = $request->privilege;
+        $user->regular_lessons = 0;
         $user->pole_lessons = 0;
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
+        $user->img = 'placeholder.png';
+        $user->name = $request->first_name.' '.$request->last_name;
         $user->phone = $request->phone;
 
         $user->save();
@@ -66,28 +72,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show ($id) {
 
         $user = User::find($id);
-        #$user->lessons = $user->lessons->groupBy('name');
-
-        /*
-        foreach ($user->lessons as $lesson) {
-
-            $lesson[0]['schedule'] = $lessons = DB::table('lessons')
-            ->select('lessons.id', 'lessons.name', 'lesson_user.pole_id', 'day_lesson.date', 'lessons.begins', 'lessons.ends')
-            ->groupBy('lessons.id', 'lessons.name', 'lesson_user.pole_id', 'day_lesson.date')
-            ->join('lesson_user', 'lessons.id', '=', 'lesson_user.lesson_id')
-            ->join('day_lesson', 'lesson_user.day_id', '=', 'day_lesson.id')
-            ->where('lesson_user.user_id', $user->id)
-            ->where('lesson_user.lesson_id', $lesson[0]['id'])
-            ->get();
-
-            /*echo '<pre>';
-            var_dump($lesson[0]['schedule']);
-            echo '</pre>';
-        }
-        */
 
         return view('user.show', [
             'user' => $user,
@@ -168,8 +155,8 @@ class UserController extends Controller
         $user = User::find($req->user_id);
         $package = Package::find($req->package_id);
         if ($package->regular_lessons != 0) {
-            $user->available_lessons += $package->regular_lessons;
-            $user->lesson_expire = date('d-m-Y', strtotime('+30 days'));
+            $user->regular_lessons += $package->regular_lessons;
+            $user->regular_expire = date('d-m-Y', strtotime('+30 days'));
         }
         if ($package->pole_lessons) { 
             $user->pole_lessons += $package->pole_lessons;
@@ -190,26 +177,7 @@ class UserController extends Controller
 
     public function userProfile (Request $request) {
 
-        $user = $request->user();
-        #$user->lessons = $user->lessons->groupBy('name');
-
-        /*
-        foreach ($user->lessons as $lesson) {
-
-            $lesson[0]['schedule'] = $lessons = DB::table('lessons')
-            ->select('lessons.id', 'lessons.name', 'lesson_user.pole_id', 'day_lesson.date', 'lessons.begins', 'lessons.ends')
-            ->groupBy('lessons.id', 'lessons.name', 'lesson_user.pole_id', 'day_lesson.date')
-            ->join('lesson_user', 'lessons.id', '=', 'lesson_user.lesson_id')
-            ->join('day_lesson', 'lesson_user.day_id', '=', 'day_lesson.id')
-            ->where('lesson_user.user_id', $user->id)
-            ->where('lesson_user.lesson_id', $lesson[0]['id'])
-            ->get();
-
-            /*echo '<pre>';
-            var_dump($lesson[0]['schedule']);
-            echo '</pre>';
-        }
-        */
+        $user = Auth::user();
 
         return view('user.show', [
             'user' => $user,
@@ -222,7 +190,6 @@ class UserController extends Controller
     }
 
     public function medalForm ($uid) {
-
 
         if (in_array(Auth::user()->role_id, [1, 2, 3])) {
 

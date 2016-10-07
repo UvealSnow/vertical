@@ -22,8 +22,8 @@ class DatabaseReset extends Migration
             $table->text('img');
             $table->integer('pole_lessons');
             $table->integer('regular_lessons');
-            $table->text('pole_expire');
-            $table->text('regular_expire');
+            $table->text('pole_expire')->nullable();
+            $table->text('regular_expire')->nullable();
             $table->text('remember_token')->nullable();
             $table->timestamps();
         });
