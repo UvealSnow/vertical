@@ -51,7 +51,7 @@
                 	   <b>Nombre del Paquete:</b> {{ $package->name }}<br><br>
                     </span>
                     <span class="class-set">
-                        <b>Precio del Paquete:</b>$ {{ $package->cost }}.00<br><br>
+                        <b>Precio del Paquete:</b>$ {{ money_format('%i', $package->amount) }}<br><br>
                     </span>
                     @if ($package->pole_lessons > 0)
                         <span class="class-set">

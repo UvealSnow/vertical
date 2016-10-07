@@ -41,7 +41,16 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Nueva Clase</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/lesson') }}">
+
+                    @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            @foreach ($errors->all() as $i => $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/lecture') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -51,18 +60,20 @@
                             </div>
                         </div>
 
-                        @if (Auth::user()->privilege != 'Maestra')
-                            <div class="form-group">
-                                <label class="col-md-4 control-label">Maestra</label>
-                                <div class="col-md-6">
-                                    <select class="form-control" name="teacher">
-                                        @foreach ($teachers as $teacher)
-                                            <option value=" {{ $teacher->id }} ">{{ $teacher->first_name.' '.$teacher->last_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Maestra</label>
+                            <div class="col-md-6">
+                                <select class="form-control" name="teacher_id">
+                                    @foreach ($teachers as $teacher)
+                                        @if ($teacher->id == Auth::user()->id)
+                                            <option value="{{ $teacher->id }}" selected="selected">Yo</option>
+                                        @else
+                                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
                             </div>
-                        @endif  
+                        </div>
 
                         <div class="form-group">
                             <label for="max_num" class="col-md-4 control-label">Max. alumnas</label>
@@ -71,6 +82,7 @@
                             </div>
                         </div>
 
+                        {{--
                         <div class="form-group">
                             <label class="col-md-4 control-label">Días</label>
                             <div class="col-md-6">
@@ -93,14 +105,16 @@
                                 <input class="form-control" type="time" name="ends" required>
                             </div>
                         </div>
+                        --}}
 
-                        <div class="form-group">
+                        <div class="radio">
                             <label class="col-md-4 control-label">Tipo de clase</label>
                             <div class="col-md-6">
-                                <label> <input type="radio" name="type" value="pole" checked> Pole </label> <br>
-                                <label> <input type="radio" name="type" value="other"> Otras </label>
+                                <label> <input type="radio" name="type" value="pole" checked> Usa poles </label> <br>
+                                <label> <input type="radio" name="type" value="other"> Otro tipo </label>
                             </div>
                         </div>
+                        <br><br>
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">

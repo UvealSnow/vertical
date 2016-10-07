@@ -124,21 +124,23 @@
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Registro</a></li>
-                    @elseif (Auth::user()->privilege === 'admin')
+                    @elseif (Auth::user()->role_id == 1)
                         <li><a href="{{ url('/user') }}">Usuarios</a></li>
                         <li><a href="{{ url('/package') }}">Paquetes</a></li>
-                        <li><a href="{{ url('/lesson') }}">Clases</a></li>
+                        <li><a href="{{ url('/lecture') }}">Clases</a></li>
                         <li><a href="{{ url('/medal') }}">Medallas</a></li>
-                    @elseif (Auth::user()->privilege === 'Maestra')
-                        <li><a href="{{ url('/lesson') }}">Clases</a></li>
-                    @elseif (Auth::user()->privilege === 'Alumna')
-                        <li><a href="{{ url('/lesson') }}">Clases</a></li>
+                    @elseif (Auth::user()->role_id == 2)
+                        <li><a href="{{ url('/lecture') }}">Clases</a></li>
+                    @elseif (Auth::user()->role_id == 3)
+                        <li><a href="{{ url('/diets') }}">Dietas</a></li>
+                    @elseif (Auth::user()->role_id == 4)
+                        <li><a href="{{ url('/lecture') }}">Clases</a></li>
                         <li><a href="{{ url('/medal') }}">Medallas</a></li>
                     @endif
                     @if (Auth::check())
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->first_name.' '.Auth::user()->last_name }} <span class="caret"></span>
+                                {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ url('/user/profile') }}"><i class="glyphicon glyphicon-user"></i> Perfil</a></li>
@@ -151,7 +153,7 @@
         </div>
     </nav>
 
-    @if (!Auth::guest() && Auth::user()->privilege != 'Alumna')
+    @if (!Auth::guest() && Auth::user()->role_id != 4)
         <div class="container" ng-controller="uiSearchCtrl as ctrl">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
@@ -164,12 +166,12 @@
                             <div class="col-sm-10">
                                 <div class="select-box">
                                    <ui-select ng-model="ctrl.person.selected" theme="select2" ng-disabled="ctrl.disabled" style="width: 100%;" title="Choose a person" append-to-body="true">
-                                      <ui-select-match placeholder="Selecciona o busca un cliente por nombre o email"><% ctrl.person.selected.first_name + ' ' + ctrl.person.selected.last_name + ' - ' + ctrl.person.selected.email %></ui-select-match>
-                                      <ui-select-choices repeat="person in ctrl.people | propsFilter: {first_name: $select.search, email: $select.search }">
-                                         <div ng-bind-html="person.first_name + ' ' + person.last_name | highlight: $select.search"></div>
+                                      <ui-select-match placeholder="Selecciona o busca un cliente por nombre o email"><% ctrl.person.selected.name + ' (' + ctrl.person.selected.title + ')' + ' - ' + ctrl.person.selected.email %></ui-select-match>
+                                      <ui-select-choices repeat="person in ctrl.people | propsFilter: { name: $select.search, email: $select.search }">
+                                         <div ng-bind-html="person.name | highlight: $select.search"></div>
                                          <small>
-                                            Email: <span ng-bind-html="person.email | highlight: $select.search"></span>
-                                            Rol: <span ng-bind-html="person.privilege"></span>
+                                            Email: <span ng-bind-html="person.email | highlight: $select.search"></span> - 
+                                            Rol: <span ng-bind-html="person.title"></span>
                                          </small>
                                       </ui-select-choices>
                                    </ui-select>

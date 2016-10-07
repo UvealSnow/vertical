@@ -104,7 +104,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Hola {{ Auth::user()->first_name.' '.Auth::user()->last_name }}
+                <div class="panel-heading">Hola {{ Auth::user()->name }}
                 <hr class="block-spacer">
                 </div>
             </div>
@@ -112,19 +112,19 @@
                 <div class="panel-body">
                     
                     <div class="combo-box">
-                        @if (Auth::user()->privilege === 'admin')
+                        @if (Auth::user()->role_id == 1)
                         <div class="addnew-btn">
                             <a href="{{ url('/user/create') }}">+</a>
                         </div>
                         @endif
-                        @if (Auth::user()->privilege != 'Alumna')
+                        @if (Auth::user()->role_id != 4)
                         <div class="panel-btn">
                             <a href="{{ url('/user') }}">Usuarios</a>
                         </div>
                         @endif
                     </div>
                     
-                    @if (Auth::user()->privilege === 'admin')
+                    @if (Auth::user()->role_id == 1)
                     <div class="combo-box">
                         <div class="addnew-btn">
                             <a href="{{ url('/package/create') }}">+</a>
@@ -135,19 +135,19 @@
                     </div>
                     @endif
                     <div class="combo-box">
-                        @if (Auth::user()->privilege === 'admin' || Auth::user()->privilege === 'Maestra')
+                        @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                         <div class="addnew-btn">
                             <a href="{{ url('/lesson/create') }}">+</a>
                         </div>
                         @endif
-                        @if (Auth::user()->privilege != 'Nutriologa' )
+                        @if (Auth::user()->role_id != 'Nutriologa' )
                         <div class="panel-btn">
-                            <a href="{{ url('/lesson') }}">Clases</a>
+                            <a href="{{ url('/lecture') }}">Clases</a>
                         </div>
                         @endif
                     </div>
                     <div class="combo-box">
-                        @if (Auth::user()->privilege === 'admin')
+                        @if (Auth::user()->role_id == 1)
                         <div class="addnew-btn">
                             <a href="{{ url('/medal/create') }}">+</a>
                         </div>

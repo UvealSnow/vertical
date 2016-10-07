@@ -11,7 +11,7 @@ class User extends Authenticatable {
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'phone', 'privilege', 'available_lessons', 'email', 'password',
+        'email', 'role_id', 'name', 'img', 'phone', 'pole_lessons', 'regular_lessons', 'pole_expire', 'regular_expire'
     ];
 
     /**
@@ -23,12 +23,16 @@ class User extends Authenticatable {
         'password', 'remember_token',
     ];
 
-    public function lessons () {
-        return $this->belongsToMany('App\Lesson')->withPivot('id', 'lesson_id', 'pole_id', 'day_id');
+    public function role () {
+        return $this->belongsTo('App\Role');
     }
 
     public function medals () {
         return $this->belongsToMany('App\Medal');
+    }
+
+    public function lessons () {
+        return $this->hasMany('App\Lesson');
     }
 
 }

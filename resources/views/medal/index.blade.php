@@ -95,7 +95,7 @@
             <div class="panel panel-default section-header">
                 <div class="panel-heading">Medallas
                 <hr class="block-spacer"> 
-                @if ($user->privilege === 'admin')
+                @if (Auth::user()->role_id == 1)
                     <a href="{{ url('/medal/create') }}" class="new-btn">Nueva Medalla</a>
                 @endif
                 </div>

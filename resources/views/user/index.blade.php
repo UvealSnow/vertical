@@ -95,7 +95,7 @@
             <div class="panel panel-default section-header">
                 <div class="panel-heading">Usuarios
                 <hr class="block-spacer">   
-                @if (Auth::user()->privilege === 'admin')
+                @if (Auth::user()->role_id == 1)
                 <a href="{{ url('/user/create') }}" class="new-btn"> Nuevo Usuario</a>
                 @endif
                 </div>
@@ -106,10 +106,10 @@
                 <div class="panel-body">
                     @if (count($users) > 0)
                         @foreach ($users as $user )
-                            @if ($user->privilege === 'Alumna')
+                            @if ($user->role_id == 4)
                                 <span class="user">
-                                <a href="{{ url('/user/'.$user->id) }}">{{ $user->first_name.' '.$user->last_name }}</a>
-                                @if (Auth::user()->privilege === 'admin' || Auth::user()->privilege === 'Maestra')
+                                <a href="{{ url('/user/'.$user->id) }}">{{ $user->name }}</a>
+                                @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                                     <span class="btn-cont">
                                     <a class="btn btn-s btn-primary " href="{{ url('/user/'.$user->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
                                     <form action="{{ url('/user/'.$user->id) }}" method="POST" style="display:inline-block;">
@@ -125,17 +125,17 @@
                     @endif
                 </div>
             </div>
-            @if (Auth::user()->privilege === 'admin')
+            @if (Auth::user()->role_id == 1)
             <div class="panel panel-default">
                 <div class="panel-heading minor-header">Maestras
                 </div>
                 <div class="panel-body">
                     @if (count($users) > 0)
                         @foreach ($users as $user )
-                            @if ($user->privilege === 'Maestra')
+                            @if ($user->role_id == 2)
                                 <span class="user">
-                                <a href="{{ url('/user/'.$user->id) }}">{{ $user->first_name.' '.$user->last_name }}</a>
-                                @if (Auth::user()->privilege === 'admin' || Auth::user()->privilege === 'Maestra')
+                                <a href="{{ url('/user/'.$user->id) }}">{{ $user->name }}</a>
+                                @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                                     <span class="btn-cont">
                                     <a class="btn btn-s btn-primary " href="{{ url('/user/'.$user->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
                                     <form action="{{ url('/user/'.$user->id) }}" method="POST" style="display:inline-block;">
@@ -157,10 +157,10 @@
                 <div class="panel-body">
                     @if (count($users) > 0)
                         @foreach ($users as $user )
-                            @if ($user->privilege === 'Nutriologa')
+                            @if ($user->role_id == 3)
                                 <span class="user">
-                                <a href="{{ url('/user/'.$user->id) }}">{{ $user->first_name.' '.$user->last_name }}</a>
-                                @if (Auth::user()->privilege === 'admin' || Auth::user()->privilege === 'Maestra')
+                                <a href="{{ url('/user/'.$user->id) }}">{{ $user->name }}</a>
+                                @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                                     <span class="btn-cont">
                                     <a class="btn btn-s btn-primary " href="{{ url('/user/'.$user->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
                                     <form action="{{ url('/user/'.$user->id) }}" method="POST" style="display:inline-block;">
@@ -182,10 +182,10 @@
                 <div class="panel-body">
                     @if (count($users) > 0)
                         @foreach ($users as $user )
-                            @if ($user->privilege === 'admin')
+                            @if ($user->role_id == 1)
                                 <span class="user">
-                                <a href="{{ url('/user/'.$user->id) }}">{{ $user->first_name.' '.$user->last_name }}</a>
-                                @if (Auth::user()->privilege === 'admin' && Auth::user()->id != $user->id)
+                                <a href="{{ url('/user/'.$user->id) }}">{{ $user->name }}</a>
+                                @if (Auth::user()->role_id == 1 && Auth::user()->id != $user->id)
                                     <span class="btn-cont">
                                     <a class="btn btn-s btn-primary " href="{{ url('/user/'.$user->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
                                     <form action="{{ url('/user/'.$user->id) }}" method="POST" style="display:inline-block;">

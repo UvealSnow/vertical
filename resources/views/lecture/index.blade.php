@@ -108,11 +108,11 @@
             <div class="panel panel-default section-header">
                 <div class="panel-heading">Clases
                 <hr class="block-spacer"> 
-                @if ($user->privilege === 'Maestra' || $user->privilege === 'admin')  
-                    <a href="{{ url('/lesson/create') }}" class="new-btn"> Nueva Clase</a>
+                @if (in_array(Auth::user()->role_id, [1, 2]))  
+                    <a href="{{ url('/lecture/create') }}" class="new-btn"> Nueva Clase</a>
                 @endif
-                @if (Auth::user()->privilege === 'Alumna')
-                    <a href="{{ url('/lesson/signup') }}" class="new-btn">Incríbete a una clase</a>
+                @if (Auth::user()->role_id == 4)
+                    <a href="{{ url('/lecture/signup') }}" class="new-btn">Incríbete a una clase</a>
                 @endif
                 </div>
             </div>
@@ -120,20 +120,20 @@
                 <div class="panel-heading minor-header">Clases</div>
                 <div class="panel-body">
                         
-                    @if (count($lessons) > 0)
+                    @if (count($lectures) > 0)
                         <br>
-                        @foreach ($lessons as $lesson)
+                        @foreach ($lectures as $lecture)
                             <span class="lesson-box">
                                 <span class="lesson-dtl">
                                     <span>
-                                        <a href="{{ url('/lesson/'.trim($lesson->id)) }}">{{ $lesson->name }}</a> con: 
-                                        <a href="{{ url('/user/'.trim($lesson->teacher_id)) }}">{{ $lesson->teacher->first_name }}</a>
+                                        <a href="{{ url('/lecture/'.trim($lecture->id)) }}">{{ $lecture->name }}</a> con: 
+                                        <a href="{{ url('/user/'.trim($lecture->teacher_id)) }}">{{ $lecture->teacher->name }}</a>
                                     </span>
                                 </span>
-                                @if ($user->privilege === 'Maestra' || $user->privilege === 'admin')
+                                @if (in_array(Auth::user()->role_id, [1, 2]))
                                     <span class="btn-cont">
-                                        <a class="btn btn-s btn-primary" href="{{ url('/lesson/'.$lesson->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
-                                        <form action="{{ url('/lesson/'.$lesson->id) }}" method="POST" style="display:inline-block;">
+                                        <a class="btn btn-s btn-primary" href="{{ url('/lecture/'.$lecture->id).'/edit' }}"><i class="fa fa-pencil-square icon-btn icon-edit" aria-hidden="true"></i></a>
+                                        <form action="{{ url('/lecture/'.$lecture->id) }}" method="POST" style="display:inline-block;">
                                             {{ csrf_field() }}
                                             <input type="hidden" name="_method" value="delete">
                                             <button class="btn btn-s btn-danger" on-click="form.submit()"><i class="fa fa-minus-square icon-btn icon-delete" aria-hidden="true"></i></button>

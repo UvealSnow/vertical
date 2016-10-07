@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
+use App\Lecture;
 use App\Lesson;
 use App\Pole;
 use App\User;
@@ -42,7 +43,7 @@ class LessonController extends Controller
      */
     public function create() {
 
-        $teachers = User::all()->where('privilege', 'Maestra');
+        $teachers = DB::table('users')->where('role_id', 2)->get();
 
         return view ('lesson.create', [
             'teachers' => $teachers,
@@ -57,43 +58,19 @@ class LessonController extends Controller
      */
     public function store (Request $request) {
 
-        $user = $request->user();
-        $lesson = new Lesson;
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'teacher' => 'required|numeric',
+            'max_num' => 'required|numeric',
+            'type' => 'required|in:pole,other',
+        ]);
 
-        $lesson->name = $request->input('name');
-        #$lesson->desc = $request->input('desc');
-        $lesson->max_students = $request->input('max_num');
+        if (Auth::user()->role_id == 1) {
 
-        if ($request->input('type') === 'pole') $lesson->use_poles = true;
-        else $lesson->use_poles = false;
+            $lesson = new Lesson;
 
-        $lesson->begins = $request->input('starts');
-        $lesson->ends = $request->input('ends');
 
-        if ($request->input('teacher') !== NULL) $lesson->teacher_id = $request->input('teacher');
-        else $lesson->teacher_id = $user->id;
-
-        if ($lesson->save()) {
-            foreach ($request->input('days') as $day) { 
-                $today = date('d-m-Y');
-                # create 1 month of classes starting from closest day next week
-                if (intval($day) == 1) $start = date('d-m-Y', strtotime('next monday'));
-                elseif (intval($day) == 2) $start = date('d-m-Y', strtotime('next tuesday'));
-                elseif (intval($day) == 3) $start = date('d-m-Y', strtotime('next wednesday'));
-                elseif (intval($day) == 4) $start = date('d-m-Y', strtotime('next thursday'));
-                elseif (intval($day) == 5) $start = date('d-m-Y', strtotime('next friday'));
-                elseif (intval($day) == 6) $start = date('d-m-Y', strtotime('next saturday'));
-                elseif (intval($day) == 7) $start = date('d-m-Y', strtotime('next sunday'));
-
-                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => $start]);
-                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +7 days'))]);
-                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +14 days'))]);
-                $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +21 days'))]);
-
-            }
         }
-
-        return redirect('/lesson');
 
     }
 
@@ -386,27 +363,6 @@ class LessonController extends Controller
 
     }
 
-    public function enrolledUsers ($day_id) {
 
-        $users = DB::table('lesson_user')
-                    ->join('users', 'users.id', '=', 'lesson_user.user_id')
-                    ->select('users.id', 'users.first_name', 'users.last_name')
-                    ->where('lesson_user.day_id', $day_id)
-                    ->get();
-
-        return response()->json($users);
-
-    }
-
-    public function poleStatus ($day_id) {
-
-        $poles = DB::table('lesson_user')
-                    ->select('pole_id')
-                    ->where('day_id', $day_id)
-                    ->get();
-
-        return response()->json($poles);
-
-    }
 
 }

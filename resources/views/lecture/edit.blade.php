@@ -39,7 +39,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Nuevo Paquete</div>
+                <div class="panel-heading">Nueva Clase</div>
                 <div class="panel-body">
 
                     @if (count($errors) > 0)
@@ -50,42 +50,57 @@
                         </div>
                     @endif
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/package') }}">
-                        
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/lecture') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Nombre</label>
                             <div class="col-md-6">
-                                <input id="text" type="name" class="form-control" name="name" placeholder="Nombre" value="{{ old('name') }}">
+                                <input id="text" type="name" class="form-control" name="name" placeholder="Nombre de la clase" value="{{ $lecture->name }}" required>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="cost" class="col-md-4 control-label">Costo</label>
+                            <label class="col-md-4 control-label">Maestra</label>
                             <div class="col-md-6">
-                                <input id="cost" type="number" class="form-control" name="cost" placeholder="Costo" min="1" value="{{ old('cost') }}">
+                                <select class="form-control" name="teacher_id">
+                                    @foreach ($teachers as $teacher)
+                                        @if ($teacher->id == $lecture->teacher_id)
+                                            <option value="{{ $teacher->id }}" selected="selected">
+                                                @if ($teacher->id == Auth::user()->id)
+                                                    Yo
+                                                @else
+                                                    {{ $teacher->name }}
+                                                @endif
+                                            </option>
+                                        @else
+                                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="lessons" class="col-md-4 control-label">Clases regulares incluidas</label>
+                            <label for="max_num" class="col-md-4 control-label">Max. alumnas</label>
                             <div class="col-md-6">
-                                <input id="lessons" type="number" class="form-control" min="0" value="0" placeholder="Clases incluidas" name="regular_lessons">
+                                <input id="max_num" type="number" class="form-control" name="max_num" min="1" placeholder="Máximo número de estudiantes" value="{{ $lecture->max_students }}" required>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="lessons" class="col-md-4 control-label">Clases de Pole incluidas</label>
+                        <div class="radio">
+                            <label class="col-md-4 control-label">Tipo de clase</label>
                             <div class="col-md-6">
-                                <input id="lessons" type="number" class="form-control" min="0" value="0" placeholder="Clases incluidas" name="pole_lessons">
+                                <label> <input type="radio" name="type" value="pole" @if ($lecture->is_pole) checked @endif> Usa poles </label> <br>
+                                <label> <input type="radio" name="type" value="other" @if (!$lecture->is_pole) checked @endif> Otro tipo </label>
                             </div>
                         </div>
+                        <br><br>
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-sign-in"></i> Agregar
+                                    <i class="fa fa-btn fa-sign-in"></i> Editar
                                 </button>
                             </div>
                         </div>

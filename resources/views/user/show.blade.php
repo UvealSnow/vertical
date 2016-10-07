@@ -65,28 +65,29 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                
-                <div class="panel-heading"> Mi Perfil</div>
-
+                @if (Auth::user()->id != $user->id)
+                    <div class="panel-heading">Perfil de usuario</div>
+                @else
+                    <div class="panel-heading">Mi Perfil</div>
+                @endif
                 <div class="pp-image">
-                    @if (Auth::user()->privilege === 'admin')
+                    @if (Auth::user()->role_id == 1)
                         <img src="/assets/admin.svg" alt="Administrador">
                     @endif
-                    @if (Auth::user()->privilege === 'Maestra')
+                    @if (Auth::user()->role_id == 2)
                         <img src="/assets/ruler.svg" alt="Instructora">
                     @endif
-                    @if (Auth::user()->privilege === 'Nutriologa')
+                    @if (Auth::user()->role_id == 3)
                         <img src="/assets/orange.svg" alt="Nutrióloga">
                     @endif
-                    @if (Auth::user()->privilege === 'Alumna')
+                    @if (Auth::user()->role_id == 4)
                         <img src="/assets/student.svg" alt="Alumna">
                     @endif
                 </div>
-
-                <h3 class="pp-name"> {{ $user->first_name.' '.$user->last_name }} </h3>
+                <h3 class="pp-name"> {{ $user->name }} </h3>
                 <hr>
                 <div class="panel-body">
-                    @if (Auth::user()->privilege === 'admin')
+                    @if (Auth::user()->role_id == 1)
                         <a href="{{ url('/user/'.$user->id.'/package') }}" class="new-btn">Agregar paquetes</a>
                         <a href="{{ url('/user/'.$user->id.'/medal') }}" class="new-btn">Otorgar medallas</a>
                         <a href="{{ url('/user/'.$user->id.'/edit') }}" class="new-btn">Editar usuario</a><br><br>
@@ -94,47 +95,28 @@
                     <p><b>Email:</b> {{ $user->email }} </p>
                     <p><b>Teléfono:</b> {{ $user->phone }} </p>
                     <p>
-                        <b>Clases regulares disponibles:</b> {{ $user->available_lessons }}. 
-                        @if ($user->available_lessons != 0)
-                            Vencen el: {{ $user->lesson_expire }}
+                        <b>Clases regulares disponibles:</b> {{ $user->regular_lessons }}. 
+                        @if ($user->regular_lessons != 0)
+                            Vencen el: {{ date('d M', strtotime($user->regular_expire)) }}
                         @endif
                     </p>
                     <p>
                         <b>Clases de pole disponibles:</b> {{ $user->pole_lessons }}. 
                         @if ($user->pole_lessons != 0) 
-                            Vencen el: {{ $user->pole_expire }}
+                            Vencen el: {{ date('d M', strtotime($user->pole_expire)) }}
                         @endif
                     </p>
-                    @if (Auth::user()->privilege === 'admin')
-                        <p><b>Privilegios:</b> {{ $user->privilege }} </p>
+                    @if (Auth::user()->role_id == 1)
+                        <p>{{ $user->role->title }} </p>
                     @endif
                 </div>
             </div>
         </div>
+       
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                
-                <div class="panel-heading"> Mis Clases</div>
-                <div class="panel-body">
-                    @if (count($user->lessons) > 0)
-                        @foreach ($user->lessons as $lesson)
-                            <h1>{{ $lesson[0]['name'] }}</h1><br>
-                            @foreach ($lesson[0]['schedule'] as $class)
-                                <p>{{ strftime('%A %d %B', strtotime($class->date)) }} de {{ $class->begins }}hrs a {{ $class->ends }}hrs</p><br>
-                            @endforeach
-                            <hr>
-                        @endforeach
-                    @else
-                        <p>No hay clases inscritas</p>
-                    @endif
-                    </div>
-                    </div>
-                </div>
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                
                 <div class="panel-heading"> Mis Medallas</div>
-                    <div class="panel-body">
+                <div class="panel-body">
                     @if (count($user->medals) > 0)
 
                         <div id="fb-root"></div>
@@ -163,6 +145,34 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading"> Mis clases</div>
+                <div class="panel-body">
+                    @if (count($user->lessons) > 0)
+                        @foreach ($user->lessons as $lesson)
+                            @if (date('z') < date('z', strtotime($lesson->schedule->date)))
+                                <p>
+                                    {{ date('d M', strtotime($lesson->date)) }} - 
+                                    {{ $lesson->schedule->lecture->name }}: 
+                                    {{ $lesson->schedule->begins }}hrs a 
+                                    {{ $lesson->schedule->ends }}hrs
+                                    @if ($lesson->schedule->lecture->is_pole)
+                                        (pole: {{ $lesson->pole_id }})
+                                    @endif
+                                </p>
+                                <br>
+                            @endif
+                        @endforeach
+                    @else 
+                        <p>No hay clases registradas.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+
         </div>
     </div>
     <div class="row">
