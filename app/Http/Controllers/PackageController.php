@@ -43,10 +43,18 @@ class PackageController extends Controller
      */
     public function store(Request $request) {
         # var_dump($request->input()['name']);
+        
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'cost' => 'required|numeric',
+            'regular_lessons' => 'numeric',
+            'pole_lessons' => 'numeric'
+        ]);
+
         $package = new Package;
 
         $package->name = $request->input('name');
-        $package->cost = $request->input('cost');
+        $package->amount = $request->input('cost');
         $package->regular_lessons = $request->input('regular_lessons');
         $package->pole_lessons = $request->input('pole_lessons');
 

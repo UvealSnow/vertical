@@ -39,12 +39,15 @@ Route::resource('medal', 'MedalController');
 
 Route::resource('package', 'PackageController');
 
-Route::get('/registered/{did}', 'LessonController@enrolledUsers');
-Route::get('/poles/{did}', 'LessonController@poleStatus');
-Route::get('/lesson/pole', 'LessonController@placeForm');
-Route::post('/lesson/{id}/enroll', 'LessonController@enrollUser');
-Route::post('/lesson/{id}/renew', 'LessonController@renewLesson');
-Route::resource('lesson', 'LessonController');
+# Route::post('/lesson/{id}/enroll', 'LessonController@enrollUser');
+# Route::post('/lesson/{id}/renew', 'LessonController@renewLesson');
+# Route::resource('lesson', 'LessonController'); # this is the old model controller
+
+Route::resource('lecture', 'LectureController'); # this is the new main model controller
+
+Route::get('/lecture/{lecture_id}/agenda/{agenda_id}/enroll', 'AgendaController@enroll');
+Route::post('/lecture/{lecture_id}/agenda/{agenda_id}', 'AgendaController@enrollUser');
+Route::resource('/lecture/{lecture_id}/agenda','AgendaController', ['except' => 'create']);
 
 Route::get('/user/{id}/package', 'UserController@showAddForm');
 Route::post('/user/package', 'UserController@addPackage');
@@ -58,7 +61,10 @@ Route::resource('user', 'UserController');
 Route::auth();
 Route::get('/home', 'HomeController@index');
 
-Route::get('/usedPoles/{day_id}', 'JsonController@usedPoles');
+# Json routes
+	
+	Route::get('/json/getPoles/{agenda_id}/{day_id}', 'AgendaController@poleStatus');
+	Route::get('/json/getEnrolled/{day_id}', 'AgendaController@enrolledUsers');
 
 /*
 	GET	/photo	index	photo.index

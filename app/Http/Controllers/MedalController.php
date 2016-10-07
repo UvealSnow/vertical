@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Medal;
 
@@ -14,14 +14,11 @@ class MedalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $req)
-    {
-        $user = $req->user();
-        if ($user->privilege === 'admin') $medals = Medal::all();
+    public function index () {
+        if (Auth::user()->role_id == 1) $medals = Medal::all();
         else $medals = $user->medals;
         
         return view('medal.index', [
-            'user' => $user,
             'medals' => $medals,
         ]);
     }
@@ -31,8 +28,7 @@ class MedalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create () {
         return view('medal.create');
     }
 
@@ -42,12 +38,15 @@ class MedalController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store (Request $request) {
         
-        $user = $request->user();
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            'desc' => 'required',
+            'img' => 'required|image'
+        ]);
 
-        if ($user === NULL || $user->privilege != 'admin') return redirect ('medal.index');
-        else {
+        if (Auth::user()->role_id == 1) {
             $medal = new Medal;
 
             $imgName = $this->generateKey().'.'.$request->file('img')->getClientOriginalExtension();
@@ -60,7 +59,7 @@ class MedalController extends Controller
 
             $medal->save();
 
-            return redirect('/medal/'.$medal->id);
+            return redirect("/medal/$medal->id");
         }
 
     }
@@ -71,10 +70,8 @@ class MedalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         $medal = Medal::find($id);
-        # var_dump($medal);
         return view('medal.show', [
             'medal' => $medal,
         ]);
@@ -86,8 +83,7 @@ class MedalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $medal = Medal::find($id);
         return view('medal.edit', [
             'medal' => $medal,

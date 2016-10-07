@@ -69,16 +69,16 @@
                 <div class="panel-heading"> Mi Perfil</div>
 
                 <div class="pp-image">
-                    @if (Auth::user()->privilege === 'admin')
+                    @if (Auth::user()->role_id == 1)
                         <img src="/assets/admin.svg" alt="Administrador">
                     @endif
-                    @if (Auth::user()->privilege === 'Maestra')
+                    @if (Auth::user()->role_id == 2)
                         <img src="/assets/ruler.svg" alt="Instructora">
                     @endif
-                    @if (Auth::user()->privilege === 'Nutriologa')
+                    @if (Auth::user()->role_id == 3)
                         <img src="/assets/orange.svg" alt="Nutrióloga">
                     @endif
-                    @if (Auth::user()->privilege === 'Alumna')
+                    @if (Auth::user()->role_id == 4)
                         <img src="/assets/student.svg" alt="Alumna">
                     @endif
                 </div>
@@ -86,7 +86,7 @@
                 <h3 class="pp-name"> {{ $user->first_name.' '.$user->last_name }} </h3>
                 <hr>
                 <div class="panel-body">
-                    @if (Auth::user()->privilege === 'admin')
+                    @if (Auth::user()->role_id == 1)
                         <a href="{{ url('/user/'.$user->id.'/package') }}" class="new-btn">Agregar paquetes</a>
                         <a href="{{ url('/user/'.$user->id.'/medal') }}" class="new-btn">Otorgar medallas</a>
                         <a href="{{ url('/user/'.$user->id.'/edit') }}" class="new-btn">Editar usuario</a><br><br>
@@ -105,31 +105,13 @@
                             Vencen el: {{ $user->pole_expire }}
                         @endif
                     </p>
-                    @if (Auth::user()->privilege === 'admin')
-                        <p><b>Privilegios:</b> {{ $user->privilege }} </p>
+                    @if (Auth::user()->role_id == 1)
+                        <p><b>Privilegios:</b> {{ $user->role_id }} </p>
                     @endif
                 </div>
             </div>
         </div>
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                
-                <div class="panel-heading"> Mis Clases</div>
-                <div class="panel-body">
-                    @if (count($user->lessons) > 0)
-                        @foreach ($user->lessons as $lesson)
-                            <h1>{{ $lesson[0]['name'] }}</h1><br>
-                            @foreach ($lesson[0]['schedule'] as $class)
-                                <p>{{ strftime('%A %d %B', strtotime($class->date)) }} de {{ $class->begins }}hrs a {{ $class->ends }}hrs</p><br>
-                            @endforeach
-                            <hr>
-                        @endforeach
-                    @else
-                        <p>No hay clases inscritas</p>
-                    @endif
-                    </div>
-                    </div>
-                </div>
+       
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 

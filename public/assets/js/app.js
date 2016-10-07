@@ -5,33 +5,37 @@ var app = angular.module('verticalApp', ['ui.select', 'ngSanitize'],
 	}
 );
 
+app.controller('scheduleCtrl', ['$scope', function ($scope) {
+
+    $scope.days = [{ 'day_id': 1 }];
+
+    $scope.addDay = function () {
+       $scope.days.push({ 'day_id': null });
+    }
+
+    $scope.removeDay = function (index) {
+        if ($scope.days.length > 1) $scope.days.splice(index, 1);
+    }
+
+}]);
+
 app.controller('lessonCtrl', ['$scope', '$http', function ($scope, $http) {
 
-	$scope.day_id = document.getElementById('day_id').value;
-	$scope.user_id = document.getElementById('user_id').value;
+	$scope.date = document.getElementById('date').value;
+	$scope.agenda_id = document.getElementById('agenda_id').value;
 
-	$scope.$watch('day_id', function (newVal, oldVal) {
-		console.log('user_id: '+$scope.user_id);
-		console.log('variable changed to: '+$scope.day_id);
+	$scope.$watch('date', function (newVal, oldVal) {
+		console.log($scope.date+' '+$scope.agenda_id);
 		$scope.getPoles();
-		$scope.getEnrolled();
 	});
 
 	$scope.getPoles = function () {
 		$http({
 			'method': 'GET',
-			'url': '/usedPoles/'+$scope.day_id
+			'url': '/json/getPoles/'+$scope.agenda_id+'/'+$scope.date
 		}).then(function (res) {
 			$scope.poles = res.data;
-		});
-	}
-
-	$scope.getEnrolled = function () {
-		$http({
-			'method': 'GET',
-			'url': '/registered/'+$scope.day_id
-		}).then(function (res) {
-			$scope.enrolled = res.data;
+			console.log($scope.poles[1].user[0].name);
 		});
 	}
 
@@ -51,7 +55,7 @@ app.controller('uiSearchCtrl', function ($scope, $http, $timeout, $interval) {
    			url: '/user/list'
    		}).then(function (res) {
    			vm.people = res.data;
-   			// console.log(vm.people);
+   			console.log(vm.people);
    		});
    	}
    	

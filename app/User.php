@@ -23,9 +23,6 @@ class User extends Authenticatable {
         'password', 'remember_token',
     ];
 
-    public function lessons () {
-        return $this->belongsToMany('App\Lesson')->withPivot('id', 'lesson_id', 'pole_id', 'day_id');
-    }
 
     public function medals () {
         return $this->belongsToMany('App\Medal');

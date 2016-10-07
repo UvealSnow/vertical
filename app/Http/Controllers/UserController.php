@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\User;
 use App\Package;
@@ -33,8 +33,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         return view('user.create');
     }
 
@@ -70,8 +69,9 @@ class UserController extends Controller
     public function show($id) {
 
         $user = User::find($id);
-        $user->lessons = $user->lessons->groupBy('name');
+        #$user->lessons = $user->lessons->groupBy('name');
 
+        /*
         foreach ($user->lessons as $lesson) {
 
             $lesson[0]['schedule'] = $lessons = DB::table('lessons')
@@ -85,8 +85,9 @@ class UserController extends Controller
 
             /*echo '<pre>';
             var_dump($lesson[0]['schedule']);
-            echo '</pre>';*/
+            echo '</pre>';
         }
+        */
 
         return view('user.show', [
             'user' => $user,
@@ -179,15 +180,20 @@ class UserController extends Controller
     }
 
     public function listUsers () {
-        $users = DB::table('users')->select('id', 'email', 'first_name', 'last_name', 'privilege')->whereNotIn('privilege', ['admin'])->get();
+        $users = DB::table('users')
+                    ->join('roles', 'roles.id', '=', 'users.role_id')
+                    ->select('users.id', 'users.email', 'users.name', 'roles.title')
+                    ->whereNotIn('role_id', [1])
+                    ->get();
         return response()->json($users);
     }
 
     public function userProfile (Request $request) {
 
         $user = $request->user();
-        $user->lessons = $user->lessons->groupBy('name');
+        #$user->lessons = $user->lessons->groupBy('name');
 
+        /*
         foreach ($user->lessons as $lesson) {
 
             $lesson[0]['schedule'] = $lessons = DB::table('lessons')
@@ -201,8 +207,9 @@ class UserController extends Controller
 
             /*echo '<pre>';
             var_dump($lesson[0]['schedule']);
-            echo '</pre>';*/
+            echo '</pre>';
         }
+        */
 
         return view('user.show', [
             'user' => $user,
@@ -214,11 +221,10 @@ class UserController extends Controller
         return redirect ('/user/'.$request->user_id);
     }
 
-    public function medalForm (Request $request, $uid) {
+    public function medalForm ($uid) {
 
-        $user = $request->user();
 
-        if ($user->privilege === 'admin' || $user->privilege === 'Maestra') {
+        if (in_array(Auth::user()->role_id, [1, 2, 3])) {
 
             $alumn = User::find($uid);
             $medals = Medal::all();
@@ -235,14 +241,14 @@ class UserController extends Controller
 
     public function giveMedal (Request $request, $uid) {
 
-        $user = $request->user();
+        $this->validate($request, [
+            'medal_id' => 'required|numeric|exists:medals,id'
+        ]);
 
-        if ($user->privilege === 'admin' || $user->privilege === 'Maestra') {
+        if (in_array(Auth::user()->role_id, [1, 2, 3])) {
 
             $alumn = User::find($uid);
-            $medal = Medal::find($request->medal_id);
-
-            $alumn->medals()->save($medal);
+            $alumn->medals()->attach($request->medal_id);
 
             return redirect ('/user/'.$uid);
 

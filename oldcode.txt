@@ -1,0 +1,59 @@
+<div class="col-md-8 col-md-offset-2">
+    <div class="panel panel-default">
+        
+        <div class="panel-heading"> Mis Clases</div>
+        <div class="panel-body">
+            @if (count($user->lessons) > 0)
+                @foreach ($user->lessons as $lesson)
+                    <h1>{{ $lesson[0]['name'] }}</h1><br>
+                    @foreach ($lesson[0]['schedule'] as $class)
+                        <p>{{ strftime('%A %d %B', strtotime($class->date)) }} de {{ $class->begins }}hrs a {{ $class->ends }}hrs</p><br>
+                    @endforeach
+                    <hr>
+                @endforeach
+            @else
+                <p>No hay clases inscritas</p>
+            @endif
+        </div>
+    </div>
+</div>
+
+------------------
+
+$user = $request->user();
+$lesson = new Lesson;
+
+$lesson->name = $request->input('name');
+#$lesson->desc = $request->input('desc');
+$lesson->max_students = $request->input('max_num');
+
+if ($request->input('type') === 'pole') $lesson->use_poles = true;
+else $lesson->use_poles = false;
+
+$lesson->begins = $request->input('starts');
+$lesson->ends = $request->input('ends');
+
+if ($request->input('teacher') !== NULL) $lesson->teacher_id = $request->input('teacher');
+else $lesson->teacher_id = $user->id;
+
+if ($lesson->save()) {
+    foreach ($request->input('days') as $day) { 
+        $today = date('d-m-Y');
+        # create 1 month of classes starting from closest day next week
+        if (intval($day) == 1) $start = date('d-m-Y', strtotime('next monday'));
+        elseif (intval($day) == 2) $start = date('d-m-Y', strtotime('next tuesday'));
+        elseif (intval($day) == 3) $start = date('d-m-Y', strtotime('next wednesday'));
+        elseif (intval($day) == 4) $start = date('d-m-Y', strtotime('next thursday'));
+        elseif (intval($day) == 5) $start = date('d-m-Y', strtotime('next friday'));
+        elseif (intval($day) == 6) $start = date('d-m-Y', strtotime('next saturday'));
+        elseif (intval($day) == 7) $start = date('d-m-Y', strtotime('next sunday'));
+
+        $lesson->days()->attach($day, ['enrolled' => 0, 'date' => $start]);
+        $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +7 days'))]);
+        $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +14 days'))]);
+        $lesson->days()->attach($day, ['enrolled' => 0, 'date' => date('d-m-Y', strtotime($start. ' +21 days'))]);
+
+    }
+}
+
+return redirect('/lesson');
