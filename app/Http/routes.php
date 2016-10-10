@@ -60,7 +60,7 @@ Route::get('/home', 'HomeController@index');
 # Json routes
 	
 	Route::get('/json/getPoles/{agenda_id}/{day_id}', 'AgendaController@poleStatus');
-	# Route::get('/json/getEnrolled/{day_id}', 'AgendaController@enrolledUsers');
+	Route::get('/json/getEnrolled/{agenda_id}/{day_id}', 'AgendaController@enrolledUsers');
 
 /*
 	GET	/photo	index	photo.index

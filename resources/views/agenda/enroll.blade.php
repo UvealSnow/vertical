@@ -179,6 +179,11 @@
                     
                     {{ csrf_field() }}
                     <input type="hidden" name="agenda_id" id="agenda_id" value="{{ $agenda->id }}">
+                    @if ($lecture->is_pole)
+                        <input type="hidden" id="is_pole" value="true">
+                    @else
+                        <input type="hidden" id="is_pole" value="false">
+                    @endif
 
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Escoje tu día</label>
@@ -207,6 +212,20 @@
                                     <span ng-if="pole.user[0].name"><% pole.user[0].name %></span>
                                     <span ng-if="!pole.status">Libre</span>
                                 </label>
+                            </div>
+                        </div>
+                    @else
+                        <div class="form-group">
+                            <div class="col-sm-6  col-sm-offset-4">Alumnas inscritas en esta clase</div>
+
+                            <div class="col-sm-6 col-sm-offset-4" ng-if="students.length > 0">
+                                <ol>
+                                    <li ng-repeat="student in students"><% student.name %></li>
+                                </ol>
+                            </div>
+
+                            <div class="col-sm-6 col-sm-offset-4" ng-if="students.length < 1">
+                                <p>No hay nadie inscrito en esta clase.</p>
                             </div>
                         </div>
                     @endif

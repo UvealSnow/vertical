@@ -21,12 +21,13 @@ app.controller('scheduleCtrl', ['$scope', function ($scope) {
 
 app.controller('lessonCtrl', ['$scope', '$http', function ($scope, $http) {
 
+	$scope.is_pole = document.getElementById('is_pole').value;
 	$scope.date = document.getElementById('date').value;
 	$scope.agenda_id = document.getElementById('agenda_id').value;
 
 	$scope.$watch('date', function (newVal, oldVal) {
-		console.log($scope.date+' '+$scope.agenda_id);
-		$scope.getPoles();
+		if ($scope.is_pole == 'true') $scope.getPoles();
+		else $scope.getEnrolled();
 	});
 
 	$scope.getPoles = function () {
@@ -35,7 +36,15 @@ app.controller('lessonCtrl', ['$scope', '$http', function ($scope, $http) {
 			'url': '/json/getPoles/'+$scope.agenda_id+'/'+$scope.date
 		}).then(function (res) {
 			$scope.poles = res.data;
-			console.log($scope.poles[1].user[0].name);
+		});
+	}
+
+	$scope.getEnrolled = function () {
+		$http({
+			'method': 'GET',
+			'url': '/json/getEnrolled/'+$scope.agenda_id+'/'+$scope.date
+		}).then(function (res) {
+			$scope.students = res.data;
 		});
 	}
 
