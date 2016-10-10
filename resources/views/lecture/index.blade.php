@@ -111,9 +111,6 @@
                 @if (in_array(Auth::user()->role_id, [1, 2]))  
                     <a href="{{ url('/lecture/create') }}" class="new-btn"> Nueva Clase</a>
                 @endif
-                @if (Auth::user()->role_id == 4)
-                    <a href="{{ url('/lecture/signup') }}" class="new-btn">Incríbete a una clase</a>
-                @endif
                 </div>
             </div>
             <div class="panel panel-default">

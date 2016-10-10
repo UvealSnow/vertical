@@ -137,7 +137,7 @@
                     <div class="combo-box">
                         @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                         <div class="addnew-btn">
-                            <a href="{{ url('/lesson/create') }}">+</a>
+                            <a href="{{ url('/lecture/create') }}">+</a>
                         </div>
                         @endif
                         @if (Auth::user()->role_id != 'Nutriologa' )
@@ -152,9 +152,15 @@
                             <a href="{{ url('/medal/create') }}">+</a>
                         </div>
                         @endif
-                        <div class="panel-btn">
-                            <a href="{{ url('/medal') }}">Medallas</a>
-                        </div>
+                        @if (Auth::user()->role_id != 4)
+                            <div class="panel-btn">
+                                <a href="{{ url('/medal') }}">Medallas</a>
+                            </div>
+                        @else
+                            <div class="panel-btn">
+                                <a href="{{ url('/user/profile') }}">Medallas</a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

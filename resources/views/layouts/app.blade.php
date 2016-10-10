@@ -135,7 +135,7 @@
                         <li><a href="{{ url('/diets') }}">Dietas</a></li>
                     @elseif (Auth::user()->role_id == 4)
                         <li><a href="{{ url('/lecture') }}">Clases</a></li>
-                        <li><a href="{{ url('/medal') }}">Medallas</a></li>
+                        <li><a href="{{ url('/user/profile') }}">Medallas</a></li>
                     @endif
                     @if (Auth::check())
                         <li class="dropdown">
