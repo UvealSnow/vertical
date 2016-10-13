@@ -171,44 +171,65 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $lecture->name }} </div>
+                <div class="panel-heading">Alumnas inscritas en {{ $lecture->name }} con {{ $lecture->teacher->name }} de {{ $agenda->begins }}hrs a {{ $agenda->ends }}hrs</div>
             </div>
             <div class="panel panel-body" ng-controller="lessonCtrl">
                 
-                <p>Maestra: {{ $lecture->teacher->name }}</p><br>
-                <p>Alumnas por clase: {{ $lecture->max_students }}</p>
-                <hr>
-                <h1>Horario</h1>
+                <form action="{{ url("/lecture/$lecture->id/agenda/$agenda->id") }}" method="POST" class="form-horizontal">
+                    
+                    {{ csrf_field() }}
+                    <input type="hidden" name="agenda_id" id="agenda_id" value="{{ $agenda->id }}">
+                    @if ($lecture->is_pole)
+                        <input type="hidden" id="is_pole" value="true">
+                    @else
+                        <input type="hidden" id="is_pole" value="false">
+                    @endif
 
-                @if (Auth::user()->role_id == 1 || Auth::user()->id == $lecture->teacher_id)
-                    <hr>
-                    <a class="btn btn-primary" href="{{ url("/lecture/$lecture->id/agenda") }}">Crear/modificar horario</a>
-                    <hr>
-                @endif
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Escoje el día</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="date" name="date" ng-model="date">
+                                @for ($i = 0; $i < 4; $i++)
+                                    <option value="{{ urlencode(date('o-m-d', strtotime('next Monday +'.($i*7).' days'))) }}">
+                                        {{ $agenda->day }}, {{ date('d M', strtotime('next Monday +'.($i*7).' days')) }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
 
-                @if (count($lecture->schedule) > 0)
-                    @foreach ($lecture->schedule as $lesson)
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <p>{{ $lesson->day }} de {{ $lesson->begins }}hrs a {{ $lesson->ends }}hrs</p>
-                                @if (Auth::user()->role_id == 4)
-                                    <a href="{{ url("/lecture/$lecture->id/agenda/$lesson->id/enroll") }}" class="btn btn-primary">Incríbete</a>
-                                @elseif (in_array(Auth::user()->role_id, [1, 2]))
-                                    <a class="btn btn-xs btn-primary" href="{{ url("/lecture/$lecture->id/agenda/$lesson->id/enrolled") }}">Ver inscritas</a>
-                                    <form action="{{ url("/lecture/$lecture->id/agenda/$lesson->id") }}" method="POST" style="display: inline-block;">
-                                        {{ csrf_field() }}
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <button class="btn btn-xs btn-danger">Eliminar</button>
-                                    </form>
-                                @endif  
-                                <br>
+                    {{-- if $lecture->is_pole: coose pole --}}
+
+                    @if ($lecture->is_pole)
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Alumnas incritas en esta clase</label>
+
+                            <div class="col-sm-6 col-sm-offset-4" ng-repeat="pole in poles">
+                                <label>
+                                    <input ng-if="!pole.status" style="margin: 10px;" type="radio" name="pole_id" value="<% $index %>">
+                                    <input ng-if="pole.status" style="margin: 10px;" type="radio" name="pole_id" value="<% $index %>" disabled>
+                                    <span>Pole <% $index + 1 %></span> - 
+                                    <span ng-if="pole.user[0].name"><% pole.user[0].name %></span>
+                                    <span ng-if="!pole.status">Libre</span>
+                                </label>
                             </div>
                         </div>
-                    @endforeach
-                @else
-                    <br>
-                    <p>No hay un horario definido para esta clase</p>
-                @endif
+                    @else
+                        <div class="form-group">
+                            <div class="col-sm-6  col-sm-offset-4">Alumnas inscritas en esta clase</div>
+
+                            <div class="col-sm-6 col-sm-offset-4" ng-if="students.length > 0">
+                                <ol>
+                                    <li ng-repeat="student in students"><% student.name %></li>
+                                </ol>
+                            </div>
+
+                            <div class="col-sm-6 col-sm-offset-4" ng-if="students.length < 1">
+                                <p>No hay nadie inscrito en esta clase.</p>
+                            </div>
+                        </div>
+                    @endif
+                </form>
             </div>
         </div>
     </div>

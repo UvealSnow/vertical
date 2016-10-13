@@ -184,4 +184,16 @@ class AgendaController extends Controller
 
     }
 
+    public function seeEnrolled ($lecture_id, $agenda_id) {
+        if (in_array(Auth::user()->role_id, [1, 2])) {
+            $lecture = Lecture::find($lecture_id);
+            $agenda = Agenda::find($agenda_id);
+            return view ('agenda.enrolled', [
+                'lecture' => $lecture,
+                'agenda' => $agenda,
+            ]);
+        }
+        else return redirect ("/lecture/$lecture->id");
+    }
+
 }
