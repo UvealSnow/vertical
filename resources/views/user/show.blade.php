@@ -146,7 +146,27 @@
             </div>
         </div>
 
-        
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading"> Mis clases</div>
+                <div class="panel-body">
+
+                    @if (session('success'))
+                        <div class="row">
+                            <div class="col-md-9 col-md-offset-2">
+                                {{ session('success') }}
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (count($user->lessons) > 0)
+                        <p>Hay clases</p>
+                    @else 
+                        <p>No hay clases registradas.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
 
         </div>
     </div>
