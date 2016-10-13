@@ -92,7 +92,9 @@
                         <a href="{{ url('/user/'.$user->id.'/edit') }}" class="new-btn">Editar usuario</a><br><br>
                     @endif
                     <p><b>Email:</b> {{ $user->email }} </p>
-                    <p><b>Teléfono:</b> {{ $user->phone }} </p>
+                    @if ($user->phone) 
+                        <p><b>Teléfono:</b> {{ $user->phone }} </p> 
+                    @endif
                     <p>
                         <b>Clases regulares disponibles:</b> {{ $user->regular_lessons }}. 
                         @if ($user->regular_lessons != 0)
@@ -176,8 +178,13 @@
                                 @if (intval(date('z')) < intval(date('z', strtotime($lesson->date))))
                                     <p>
                                         {{ date('d M', strtotime($lesson->date)) }} - 
-                                        
-                                        
+                                        {{ $lesson->schedule->lecture->name }}, 
+                                        con: {{ $lesson->schedule->lecture->teacher->name }}.
+                                        de {{ $lesson->schedule->begins }}hrs a 
+                                        {{ $lesson->schedule->ends }}hrs
+                                        @if ($lesson->schedule->lecture->is_pole)
+                                            (pole: {{ $lesson->pole_id }})
+                                        @endif
                                     </p>
                                     <br>
                                 @endif
