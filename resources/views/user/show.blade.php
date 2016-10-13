@@ -146,44 +146,7 @@
             </div>
         </div>
 
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading"> Mis clases</div>
-                <div class="panel-body">
-                    @if (session('success'))
-                        <div class="row">
-                            <div class="col-md-9 col-md-offset-2">
-                                {{ session('success') }}
-                            </div>
-                        </div>
-                    @endif
-                    @if (count($user->lessons) > 0)
-                        @if (Auth::user()->role_id == 2)
-                            @foreach ($user->lessons as $lecture) 
-                                <p>Clase de: <a href="{{ url("/lecture/$lecture->id") }}">{{ $lecture->name }}</a></p>
-                            @endforeach
-                        @else
-                            @foreach ($user->lessons as $lesson)
-                                @if (date('z') < date('z', strtotime($lesson->date)))
-                                    <p>
-                                        {{ date('d M', strtotime($lesson->date)) }} - 
-                                        {{ $lesson->schedule->lecture->name }}: 
-                                        {{ $lesson->schedule->begins }}hrs a 
-                                        {{ $lesson->schedule->ends }}hrs
-                                        @if ($lesson->schedule->lecture->is_pole)
-                                            (pole: {{ $lesson->pole_id }})
-                                        @endif
-                                    </p>
-                                    <br>
-                                @endif
-                            @endforeach
-                        @endif
-                    @else 
-                        <p>No hay clases registradas.</p>
-                    @endif
-                </div>
-            </div>
-        </div>
+        
 
         </div>
     </div>
