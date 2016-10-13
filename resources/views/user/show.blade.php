@@ -177,9 +177,7 @@
                                     <p>
                                         {{ date('d M', strtotime($lesson->date)) }} - 
                                         
-                                        @if ($lesson->schedule->lecture->is_pole)
-                                            (pole: {{ $lesson->pole_id }})
-                                        @endif
+                                        
                                     </p>
                                     <br>
                                 @endif
