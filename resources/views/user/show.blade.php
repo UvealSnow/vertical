@@ -176,10 +176,7 @@
                                 @if (intval(date('z')) < intval(date('z', strtotime($lesson->date))))
                                     <p>
                                         {{ date('d M', strtotime($lesson->date)) }} - 
-                                        {{ $lesson->schedule->lecture->name }}, 
-                                        con: {{ $lesson->schedule->lecture->teacher->name }}.
-                                        de {{ $lesson->schedule->begins }}hrs a 
-                                        {{ $lesson->schedule->ends }}hrs
+                                        
                                         @if ($lesson->schedule->lecture->is_pole)
                                             (pole: {{ $lesson->pole_id }})
                                         @endif
