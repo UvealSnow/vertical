@@ -150,23 +150,47 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Mis clases</div>
                 <div class="panel-body">
-
-                    @if (session('success'))
-                        <div class="row">
-                            <div class="col-md-9 col-md-offset-2">
-                                {{ session('success') }}
-                            </div>
-                        </div>
-                    @endif
-
-                    @if (count($user->lessons) > 0)
-                        @if ($user->role_id == 2) {{-- if user is a teacher --}}
-                            @foreach ($user->lessons as $lesson) 
-                                <p>Clase de: <a href="{{ url("/lecture/$lesson->id") }}">{{ $lesson->schedule->lecture->name }}</a></p>
+                    @if ($user->role_id == 2)
+                       
+                        @if (count($user->lectures) > 0)
+                            <h1>Das clases de:</h1><br>
+                            @foreach ($user->lectures as $lecture)
+                                Clase de: <a href="{{ url("lecture/$lecture->id") }}">{{ $lecture->name }}</a> <br><br>
                             @endforeach
+                        @else 
+                            <p>No doy clases, <a href="{{ url("/lecture/create") }}">Crea una.</a></p>
                         @endif
-                    @else 
-                        <p>No hay clases registradas.</p>
+
+                    @else
+                        
+                        @if (session('success'))
+                            <div class="row">
+                                <div class="col-md-9 col-md-offset-2">
+                                    {{ session('success') }}
+                                </div>
+                            </div>
+                        @endif
+
+                        @if (count($user->lessons) > 0)
+                            @foreach ($user->lessons as $lesson)
+                                @if (intval(date('z')) < intval(date('z', strtotime($lesson->date))))
+                                    <p>
+                                        {{ date('d M', strtotime($lesson->date)) }} - 
+                                        {{ $lesson->schedule->lecture->name }}, 
+                                        con: {{ $lesson->schedule->lecture->teacher->name }}.
+                                        de {{ $lesson->schedule->begins }}hrs a 
+                                        {{ $lesson->schedule->ends }}hrs
+                                        @if ($lesson->schedule->lecture->is_pole)
+                                            (pole: {{ $lesson->pole_id }})
+                                        @endif
+                                    </p>
+                                    <br>
+                                @endif
+                            @endforeach
+                        @else
+                            <p>No tienes clases próximas. <a href="{{ url("/lesson") }}">Registra algunas</a></p>
+                        @endif
+
                     @endif
                 </div>
             </div>

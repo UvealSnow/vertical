@@ -179,8 +179,8 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        if ($user->role_id == 2) {
-            $user->lessons = DB::table('lectures')
+        if ($user->role_id == 2) { # if teacher
+            $user->lectures = DB::table('lectures')
                                 ->where('teacher_id', $user->id)
                                 ->get();
         }
