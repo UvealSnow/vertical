@@ -148,7 +148,7 @@
 
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading"> Mis clases</div>
+                <div class="panel-heading">Mis clases</div>
                 <div class="panel-body">
 
                     @if (session('success'))
@@ -163,22 +163,6 @@
                         @if ($user->role_id == 2) {{-- if user is a teacher --}}
                             @foreach ($user->lessons as $lesson) 
                                 <p>Clase de: <a href="{{ url("/lecture/$lesson->id") }}">{{ $lesson->schedule->lecture->name }}</a></p>
-                            @endforeach
-                        @else
-                            @foreach ($user->lessons as $lesson)
-                                @if (intval(date('z')) < intval(date('z', strtotime($lesson->date))))
-                                    <p>
-                                        {{ date('d M', strtotime($lesson->date)) }} - 
-                                        {{ $lesson->schedule->lecture->name }}, 
-                                        con: {{ $lesson->schedule->lecture->teacher->name }}.
-                                        de {{ $lesson->schedule->begins }}hrs a 
-                                        {{ $lesson->schedule->ends }}hrs
-                                        @if ($lesson->schedule->lecture->is_pole)
-                                            (pole: {{ $lesson->pole_id }})
-                                        @endif
-                                    </p>
-                                    <br>
-                                @endif
                             @endforeach
                         @endif
                     @else 
