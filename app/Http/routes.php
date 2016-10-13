@@ -41,6 +41,10 @@ Route::resource('package', 'PackageController');
 
 Route::resource('lecture', 'LectureController'); # this is the new main model controller
 
+Route::get('/diet/re-assign/{diet_id}', 'DietController@reAssignForm');
+Route::post('/diet/re-assign/{diet_id}', 'DietController@reAssignPost');
+Route::resource('diet', 'DietController');
+
 Route::get('/lecture/{lecture_id}/agenda/{agenda_id}/enrolled', 'AgendaController@seeEnrolled');
 Route::get('/lecture/{lecture_id}/agenda/{agenda_id}/enroll', 'AgendaController@enroll');
 Route::post('/lecture/{lecture_id}/agenda/{agenda_id}', 'AgendaController@enrollUser');

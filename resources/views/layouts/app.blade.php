@@ -132,7 +132,7 @@
                     @elseif (Auth::user()->role_id == 2)
                         <li><a href="{{ url('/lecture') }}">Clases</a></li>
                     @elseif (Auth::user()->role_id == 3)
-                        <li><a href="{{ url('/diets') }}">Dietas</a></li>
+                        <li><a href="{{ url('/diet') }}">Dietas</a></li>
                     @elseif (Auth::user()->role_id == 4)
                         <li><a href="{{ url('/lecture') }}">Clases</a></li>
                         <li><a href="{{ url('/user/profile') }}">Medallas</a></li>

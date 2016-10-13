@@ -104,7 +104,7 @@ class AgendaController extends Controller
 
         $this->validate($request, [
             'date' => 'required',
-            'pole_id' => 'numeric|max:7'
+            'pole_id' => 'required_if:is_pole,true|numeric|max:7'
         ]);
 
         $user = Auth::user();

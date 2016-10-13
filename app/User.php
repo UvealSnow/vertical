@@ -35,4 +35,12 @@ class User extends Authenticatable {
         return $this->hasMany('App\Lesson');
     }
 
+    public function diet () {
+        return $this->hasOne('App\Diet', 'user_id');
+    }
+
+    public function diets () {
+        return $this->hasMany('App\Diet', 'nutriologist_id');
+    }
+
 }

@@ -117,7 +117,7 @@
                             <a href="{{ url('/user/create') }}">+</a>
                         </div>
                         @endif
-                        @if (Auth::user()->role_id != 4)
+                        @if (in_array(Auth::user()->role_id, [1, 2, 3]))
                         <div class="panel-btn">
                             <a href="{{ url('/user') }}">Usuarios</a>
                         </div>
@@ -125,43 +125,49 @@
                     </div>
                     
                     @if (Auth::user()->role_id == 1)
-                    <div class="combo-box">
-                        <div class="addnew-btn">
-                            <a href="{{ url('/package/create') }}">+</a>
+                        <div class="combo-box">
+                            <div class="addnew-btn">
+                                <a href="{{ url('/package/create') }}">+</a>
+                            </div>
+                            <div class="panel-btn">
+                                <a href="{{ url('/package') }}">Paquetes</a>
+                            </div>
                         </div>
-                        <div class="panel-btn">
-                            <a href="{{ url('/package') }}">Paquetes</a>
-                        </div>
-                    </div>
                     @endif
+
                     <div class="combo-box">
-                        @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                        @if (in_array(Auth::user()->role_id, [1, 2]))
                         <div class="addnew-btn">
                             <a href="{{ url('/lecture/create') }}">+</a>
                         </div>
                         @endif
-                        @if (Auth::user()->role_id != 'Nutriologa' )
                         <div class="panel-btn">
                             <a href="{{ url('/lecture') }}">Clases</a>
                         </div>
-                        @endif
                     </div>
+
+                    @if (Auth::user()->role_id == 3)
+                        <div class="combo-box">
+                            <div class="addnew-btn">
+                                <a href="{{ url('/diet/create') }}">+</a>
+                            </div>
+                            <div class="panel-btn">
+                                <a href="{{ url('/diet') }}">Dietas</a>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="combo-box">
                         @if (Auth::user()->role_id == 1)
                         <div class="addnew-btn">
                             <a href="{{ url('/medal/create') }}">+</a>
                         </div>
                         @endif
-                        @if (Auth::user()->role_id != 4)
-                            <div class="panel-btn">
-                                <a href="{{ url('/medal') }}">Medallas</a>
-                            </div>
-                        @else
-                            <div class="panel-btn">
-                                <a href="{{ url('/user/profile') }}">Medallas</a>
-                            </div>
-                        @endif
+                        <div class="panel-btn">
+                            <a href="{{ url('/user/profile') }}">Medallas</a>
+                        </div>
                     </div>
+                    
                 </div>
             </div>
         </div>

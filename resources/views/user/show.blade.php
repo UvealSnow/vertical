@@ -167,8 +167,8 @@
                         
                         @if (session('success'))
                             <div class="row">
-                                <div class="col-md-9 col-md-offset-2">
-                                    {{ session('success') }}
+                                <div class="col-md-9">
+                                    {{ session('success') }} <br><br>
                                 </div>
                             </div>
                         @endif
@@ -190,7 +190,7 @@
                                 @endif
                             @endforeach
                         @else
-                            <p>No tienes clases próximas. <a href="{{ url("/lesson") }}">Registra algunas</a></p>
+                            <p>No tienes clases próximas. <a href="{{ url("/lecture") }}">Registra algunas</a></p>
                         @endif
 
                     @endif
