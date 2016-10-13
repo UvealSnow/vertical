@@ -152,7 +152,12 @@
                 <div class="panel-heading"> Mis clases</div>
                 <div class="panel-body">
                     @if (count($user->lessons) > 0)
-                        @foreach ($user->lessons as $lesson)
+                        @if (Auth::user()->role_id == 2)
+                            @foreach ($user->lessons as $lecture) 
+                                <p>Clase de: <a href="{{ url("/lecture/$lecture->id") }}">{{ $lecture->name }}</a></p>
+                            @endforeach
+                        @else
+                            @foreach ($user->lessons as $lesson)
                             @if (date('z') < date('z', strtotime($lesson->schedule->date)))
                                 <p>
                                     {{ date('d M', strtotime($lesson->date)) }} - 
@@ -166,6 +171,7 @@
                                 <br>
                             @endif
                         @endforeach
+                        @endif
                     @else 
                         <p>No hay clases registradas.</p>
                     @endif

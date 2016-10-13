@@ -179,6 +179,12 @@ class UserController extends Controller
 
         $user = Auth::user();
 
+        if ($user->role_id = 2) {
+            $user->lessons = DB::table('lectures')
+                                ->where('teacher_id', $user->id)
+                                ->get();
+        }
+
         return view('user.show', [
             'user' => $user,
         ]);

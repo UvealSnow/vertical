@@ -80,9 +80,12 @@ class AgendaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($lecture_id, $agenda_id) {
-        Agenda::find($agenda_id)->delete();
-        DB::table('lessons')->where('agenda_id', $agenda_id)->delete();
-        return redirect ("/lecture/$lecture->id");
+        $agenda = Agenda::find($agenda_id);
+        if ($agenda) {
+            $agenda->delete();
+            DB::table('lessons')->where('agenda_id', $agenda_id)->delete();    
+        }
+        return redirect ("/lecture/$lecture_id");
     }
 
     public function enroll ($lecture_id, $agenda_id) {
