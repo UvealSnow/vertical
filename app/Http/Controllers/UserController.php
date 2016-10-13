@@ -184,11 +184,6 @@ class UserController extends Controller
                                 ->where('teacher_id', $user->id)
                                 ->get();
         }
-        elseif ($user->role_id == 4) {
-            $user->lessons = DB::table('lessons')
-                                ->where('user_id', $user->id)
-                                ->get();
-        }
 
         return view('user.show', [
             'user' => $user,

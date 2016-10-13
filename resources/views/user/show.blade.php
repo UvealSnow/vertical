@@ -157,19 +157,19 @@
                             @endforeach
                         @else
                             @foreach ($user->lessons as $lesson)
-                            @if (date('z') < date('z', strtotime($lesson->schedule->date)))
-                                <p>
-                                    {{ date('d M', strtotime($lesson->date)) }} - 
-                                    {{ $lesson->schedule->lecture->name }}: 
-                                    {{ $lesson->schedule->begins }}hrs a 
-                                    {{ $lesson->schedule->ends }}hrs
-                                    @if ($lesson->schedule->lecture->is_pole)
-                                        (pole: {{ $lesson->pole_id }})
-                                    @endif
-                                </p>
-                                <br>
-                            @endif
-                        @endforeach
+                                @if (date('z') < date('z', strtotime($lesson->date)))
+                                    <p>
+                                        {{ date('d M', strtotime($lesson->date)) }} - 
+                                        {{ $lesson->schedule->lecture->name }}: 
+                                        {{ $lesson->schedule->begins }}hrs a 
+                                        {{ $lesson->schedule->ends }}hrs
+                                        @if ($lesson->schedule->lecture->is_pole)
+                                            (pole: {{ $lesson->pole_id }})
+                                        @endif
+                                    </p>
+                                    <br>
+                                @endif
+                            @endforeach
                         @endif
                     @else 
                         <p>No hay clases registradas.</p>
