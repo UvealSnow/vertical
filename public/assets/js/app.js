@@ -26,9 +26,22 @@ app.controller('lessonCtrl', ['$scope', '$http', function ($scope, $http) {
 	$scope.agenda_id = document.getElementById('agenda_id').value;
 
 	$scope.$watch('date', function (newVal, oldVal) {
+		console.log($scope.date);
+		$scope.isEnrolled();
 		if ($scope.is_pole == 'true') $scope.getPoles();
 		else $scope.getEnrolled();
+
 	});
+
+	$scope.isEnrolled = function () {
+		$http({
+			'method': 'GET',
+			'url': '/json/checkIfEnrolled/'+$scope.agenda_id+'/'+$scope.date
+		}).then(function (res) {
+			$scope.enrolled = res.data.enrolled;
+			console.log($scope.enrolled);
+		});
+	}
 
 	$scope.getPoles = function () {
 		$http({

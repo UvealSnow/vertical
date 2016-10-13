@@ -202,12 +202,13 @@
 
                     @if ($lecture->is_pole)
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Escoje tu pole</label>
-
+                            <label ng-if="!enrolled" class="col-sm-4 control-label">Escoje tu pole</label>
+                            <label ng-if="enrolled" class="col-sm-4 col-sm-offset-4">Ya estás inscrita en esta clase</label>
+                            <br><br>
                             <div class="col-sm-6 col-sm-offset-4" ng-repeat="pole in poles">
                                 <label>
-                                    <input ng-if="!pole.status" style="margin: 10px;" type="radio" name="pole_id" value="<% $index %>">
-                                    <input ng-if="pole.status" style="margin: 10px;" type="radio" name="pole_id" value="<% $index %>" disabled>
+                                    <input ng-if="!pole.status && !enrolled" style="margin: 10px;" type="radio" name="pole_id" value="<% $index %>">
+                                    <input ng-if="pole.status && !enrolled" style="margin: 10px;" type="radio" name="pole_id" value="<% $index %>" disabled>
                                     <span>Pole <% $index + 1 %></span> - 
                                     <span ng-if="pole.user[0].name"><% pole.user[0].name %></span>
                                     <span ng-if="!pole.status">Libre</span>

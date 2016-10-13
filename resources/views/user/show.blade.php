@@ -150,6 +150,13 @@
             <div class="panel panel-default">
                 <div class="panel-heading"> Mis clases</div>
                 <div class="panel-body">
+                    @if (session('success'))
+                        <div class="row">
+                            <div class="col-md-9 col-md-offset-2">
+                                {{ session('success') }}
+                            </div>
+                        </div>
+                    @endif
                     @if (count($user->lessons) > 0)
                         @if (Auth::user()->role_id == 2)
                             @foreach ($user->lessons as $lecture) 

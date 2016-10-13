@@ -114,7 +114,9 @@ class AgendaController extends Controller
         if (count($this->enrolledUsers($agenda_id, $request->date)) < $lecture->max_students) {
             if ($lecture->is_pole && $user->pole_lessons > 0) $user->pole_lessons -= 1;
             elseif (!$lecture->is_pole && $user->regular_lessons > 0) $user->regular_lessons -= 1;
-            else return redirect ("/lecture/$lecture_id");
+            else return redirect ("/lecture/$lecture_id")->with('fail', 'No tienes créditos suficientes');
+
+            # Check if the user is already enrolled in this class
 
             $lesson = new Lesson;
             $lesson->agenda_id = $agenda_id;
@@ -125,7 +127,7 @@ class AgendaController extends Controller
             $lesson->save();
             $user->save();
 
-            return redirect ("/user/profile");
+            return redirect ("/user/profile")->with('success', 'Te inscribiste exitosamente');
 
         }
         else return redirect ("/lecture/$lecture_id");
@@ -197,6 +199,26 @@ class AgendaController extends Controller
             ]);
         }
         else return redirect ("/lecture/$lecture->id");
+    }
+
+    public function checkIfEnrolled ($agenda_id, $date) {
+        $user = Auth::user();
+        $agenda = Agenda::find($agenda_id);
+        if ($user->role_id == 4) {
+            $enrolled = DB::table('lessons')
+                        ->where([
+                            ['user_id', '=', $user->id],
+                            ['agenda_id', '=', $agenda_id], 
+                            ['date', '=', $date]
+                        ])
+                        ->get();
+
+            if (count($enrolled) > 0) $enrolled = ['enrolled' => true];
+            else $enrolled = ['enrolled' => false];
+            
+            return response()->json($enrolled);
+        }
+        else return redirect ("/lecture/".$agenda->lecture->id);
     }
 
 }
