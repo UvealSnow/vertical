@@ -116,7 +116,25 @@ class LectureController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        //
+
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'teacher_id' => 'required|numeric',
+            'max_num' => 'required|numeric',
+            'type' => 'required|string|in:pole,other'
+        ]);
+
+        $lecture = Lecture::findOrFail($id);
+
+        $lecture->name = $request->name;
+        $lecture->teacher_id = $request->teacher_id;
+        $lecture->max_students = $request->max_num;
+        if ($request->is_pole == 'pole') $lecture->is_pole = true;
+        else $lecture->is_pole = false;
+        $lecture->save();
+
+        return redirect ("/lecture/$lecture->id");
+
     }
 
     /**
@@ -125,9 +143,20 @@ class LectureController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id) {
+        
+        $lecture = Lecture::findOrFail($id);
+
+        $schedule = DB::table('agendas')
+                    ->where('lecture_id', $lecture->id)
+                    ->pluck('id');
+
+        DB::table('agendas')->where('lecture_id', $lecture->id)->delete();
+        DB::table('lessons')->whereIn('agenda_id', $schedule)->delete();
+        $lecture->delete();
+
+        return redirect ("/lecture");
+
     }
 
     public function getTeachers () {

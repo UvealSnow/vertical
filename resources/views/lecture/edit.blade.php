@@ -39,7 +39,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Nueva Clase</div>
+                <div class="panel-heading">Editar clase {{ $lecture->name }}</div>
                 <div class="panel-body">
 
                     @if (count($errors) > 0)
@@ -50,8 +50,10 @@
                         </div>
                     @endif
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/lecture') }}">
+                    <form class="form-horizontal" role="form" method="post" action="{{ url("/lecture/$lecture->id") }}">
                         {{ csrf_field() }}
+
+                        <input type="hidden" name="_method" value="put">
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Nombre</label>
