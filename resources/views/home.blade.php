@@ -1,193 +1,82 @@
 @extends('layouts.app')
 
 @section('content')
-<style type="text/css">
-    .panel-heading{
-        background-color: transparent !important;
-        font-family: NexaBold;
-        font-size: 24px;
-        color: #511B73 !important;
-    }
-
-    .block-spacer{
-        background-color: #FFE000;
-        height: 3px;
-        width: 100%;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    .panel-btn{
-        width: 100%;
-        background-color: #FFE000;
-        margin: 10px 0;
-        padding: 10px;
-        border-radius: 3px;
-        text-align: center;
-        transition: all 0.2s ease;
-    }
-
-    .panel-btn:hover{
-        transform: translateY(-3px);
-        box-shadow: 0px 3px 3px rgba(0,0,0,0.1);
-    }
-
-    .panel-btn a{
-        color: white;
-        text-transform: uppercase;
-        font-family: NexaBlack;
-        font-size: 20px;
-    }
-
-    .panel-btn a:hover{
-        text-decoration: none;
-    }
-
-    .combo-box{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .addnew-btn{
-        background-color: #511B73;
-        padding: 16px;
-        color: white;
-        font-size: 20px;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 10px;
-        font-family: NexaBold;
-        transition: all 0.2s ease;
-    }
-
-    .addnew-btn:hover{
-        transform: translateY(-3px);
-        box-shadow: 0px 3px 3px rgba(0,0,0,0.1);
-    }
-
-    .addnew-btn a{
-        color: white;
-    }
-
-    .addnew-btn a:hover{
-        text-decoration: none;
-    }
-
-    .logo-vertical{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    .dir-vertical{
-        border: none !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: none !important;
-    }
-
-    .dir-vertical p{
-        text-align: center;
-    }
-
-</style>
 
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">Hola {{ Auth::user()->name }}
-                <hr class="block-spacer">
-                </div>
-            </div>
+            <h2>¡Hola {{ Auth::user()->name }}!</h2>
+            <hr class="block-spacer">
+            <br>
             <div class="panel panel-default">
                 <div class="panel-body">
                     
                     <div class="combo-box">
-                        @if (Auth::user()->role_id == 1)
-                        <div class="addnew-btn">
-                            <a href="{{ url('/user/create') }}">+</a>
+                        @if (in_array(Auth::user()->role_id, [1, 2, 3]))
+                        <div class="panel-btn col-md-6">
+                            <i class="fa fa-users" aria-hidden="true"></i>&nbsp;
+                            <a href="{{ url('/user') }}">Ver Usuarios</a>
                         </div>
                         @endif
-                        @if (in_array(Auth::user()->role_id, [1, 2, 3]))
-                        <div class="panel-btn">
-                            <a href="{{ url('/user') }}">Usuarios</a>
+                        @if (Auth::user()->role_id == 1)
+                        <div class="addnew-btn col-md-5 ">
+                            <a href="{{ url('/user/create') }}">Nuevo Usuario</a>
                         </div>
                         @endif
                     </div>
                     
                     @if (Auth::user()->role_id == 1)
                         <div class="combo-box">
-                            <div class="addnew-btn">
-                                <a href="{{ url('/package/create') }}">+</a>
+                            <div class="panel-btn col-md-6">
+                                <i class="fa fa-briefcase" aria-hidden="true"></i>&nbsp;
+                                <a href="{{ url('/package') }}">Ver Paquetes</a>
                             </div>
-                            <div class="panel-btn">
-                                <a href="{{ url('/package') }}">Paquetes</a>
+                            <div class="addnew-btn col-md-5">
+                                <a href="{{ url('/package/create') }}">Nuevo Paquete</a>
                             </div>
                         </div>
                     @endif
 
                     <div class="combo-box">
+                        <div class="panel-btn col-md-6">
+                            <i class="fa fa-book" aria-hidden="true"></i>&nbsp;
+                            <a href="{{ url('/lecture') }}">Ver Clases</a>
+                        </div>
                         @if (in_array(Auth::user()->role_id, [1, 2]))
-                        <div class="addnew-btn">
-                            <a href="{{ url('/lecture/create') }}">+</a>
+                        <div class="addnew-btn col-md-5">
+                            <a href="{{ url('/lecture/create') }}">Nueva Clase</a>
                         </div>
                         @endif
-                        <div class="panel-btn">
-                            <a href="{{ url('/lecture') }}">Clases</a>
-                        </div>
                     </div>
 
                     @if (Auth::user()->role_id == 3)
                         <div class="combo-box">
-                            <div class="addnew-btn">
-                                <a href="{{ url('/diet/create') }}">+</a>
-                            </div>
                             <div class="panel-btn">
-                                <a href="{{ url('/diet') }}">Dietas</a>
+                                <i class="fa fa-cutlery" aria-hidden="true"></i>&nbsp;  
+                                <a href="{{ url('/diet') }}">Ver Dietas</a>
+                            </div>
+                            <div class="addnew-btn">
+                                <a href="{{ url('/diet/create') }}">Nueva Dieta</a>
                             </div>
                         </div>
                     @endif
 
                     <div class="combo-box">
+                        <div class="panel-btn col-md-6">
+                            <i class="fa fa-certificate" aria-hidden="true"></i>&nbsp;
+                            <a href="{{ url('/user/profile') }}">Ver Medallas</a>
+                        </div>
                         @if (Auth::user()->role_id == 1)
-                        <div class="addnew-btn">
-                            <a href="{{ url('/medal/create') }}">+</a>
+                        <div class="addnew-btn col-md-5">
+                            <a href="{{ url('/medal/create') }}">Nueva Medalla</a>
                         </div>
                         @endif
-                        <div class="panel-btn">
-                            <a href="{{ url('/user/profile') }}">Medallas</a>
-                        </div>
                     </div>
                     
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default logo-vertical">
-                <img src="assets/Verticalc.svg" alt="Vertical Pole & Fitness">
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default dir-vertical">
-                <p>
-                    Av. Tercer Milenio #385<br>
-                    San Luis Potosí, 78211
-                </p>
-            </div>
-        </div>
-    </div>
+    
 </div>
 @endsection

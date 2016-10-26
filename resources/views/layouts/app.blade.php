@@ -15,82 +15,24 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="/reset.css">
+    <link rel="stylesheet" href="/normalize.css">
     <link rel="stylesheet" href="/style.min.css">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/app.css">
+    <link rel='stylesheet' href='/fullcalendar.css' />
 
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
 
     <script type="text/javascript" src="/assets/js/vendor/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery.min.js'></script>
+    <script src="http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.js'></script>
     <script type="text/javascript" src="/assets/js/vendor/ui-select.min.js"></script>
     <script type="text/javascript" src="/assets/js/app.js"></script>
 
-    <style>
-        body{
-            font-family: 'Lato';
-            font-size: 16px;
-        }
-
-        @font-face {
-            font-family: NexaBlack;
-            src: url(../fonts/NexaBlack.otf);
-        }
-
-        @font-face {
-            font-family: NexaBold;
-            src: url(../fonts/NexaBold.otf);
-        }
-
-        @font-face {
-            font-family: Lato;
-            src: url(../fonts/Lato-Light.ttf);
-        }
-
-        @font-face {
-            font-family: OstrichB;
-            src: url(../fonts/OstrichSans-Bold.otf);
-        }
-
-        .fa-btn{
-            margin-right: 6px;
-        }
-
-        .select2 > .select2-choice.ui-select-match {
-            /* Because of the inclusion of Bootstrap */
-            height: 29px;
-        }
-
-        .selectize-control > .selectize-dropdown {
-            top: 36px;
-        }
-        /* Some additional styling to demonstrate that append-to-body helps achieve the proper z-index layering. */
-        .select-box {
-          background: #fff;
-          position: relative;
-          z-index: 1;
-        }
-        .alert-info.positioned {
-          margin-top: 1em;
-          position: relative;
-          z-index: 10000; /* The select2 dropdown has a z-index of 9999 */
-        }
-        
-        .navbar-brand{
-            margin:0;
-            padding:0;
-            display: flex;
-            align-items: center;
-        }
-        .navbar-brand img{
-            width: 120px;
-        }
-
-        a{
-            text-decoration: none;
-        }
-    </style>
 </head>
+
 <body id="app-layout" ng-app="verticalApp">
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
@@ -114,7 +56,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     @if (Auth::check())
-                    <li><a href="{{ url('/home') }}">Mi Panel</a></li>
+                    <li><a href="{{ url('/user/profile') }}">Mi Perfil</a></li>
                     @endif
                 </ul>
 
@@ -122,8 +64,8 @@
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     @if (Auth::guest())
-                        <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Registro</a></li>
+                        
+                        <li><a href="{{ url('/') }}">Volver a Vertical</a></li>
                     @elseif (Auth::user()->role_id == 1)
                         <li><a href="{{ url('/user') }}">Usuarios</a></li>
                         <li><a href="{{ url('/package') }}">Paquetes</a></li>
@@ -152,11 +94,12 @@
             </div>
         </div>
     </nav>
+    <hr class="navbar-separator">
 
     @if (!Auth::guest() && Auth::user()->role_id != 4)
         <div class="container" ng-controller="uiSearchCtrl as ctrl">
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-6 col-md-offset-6">
                     <form action="/user/profile" method="POST">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="user_id" value=" <% ctrl.person.selected.id %> ">
@@ -165,8 +108,8 @@
                             <label for="quote-name" class="col-sm-3 control-label"></label>
                             <div class="col-sm-10">
                                 <div class="select-box">
-                                   <ui-select ng-model="ctrl.person.selected" theme="select2" ng-disabled="ctrl.disabled" style="width: 100%;" title="Choose a person" append-to-body="true">
-                                      <ui-select-match placeholder="Selecciona o busca un cliente por nombre o email"><% ctrl.person.selected.name + ' (' + ctrl.person.selected.title + ')' + ' - ' + ctrl.person.selected.email %></ui-select-match>
+                                   <ui-select ng-model="ctrl.person.selected" theme="select2" ng-disabled="ctrl.disabled" style="width: 100%;" append-to-body="true">
+                                      <ui-select-match placeholder="Selecciona o busca por nombre o email"><% ctrl.person.selected.name + ' (' + ctrl.person.selected.title + ')' + ' - ' + ctrl.person.selected.email %></ui-select-match>
                                       <ui-select-choices repeat="person in ctrl.people | propsFilter: { name: $select.search, email: $select.search }">
                                          <div ng-bind-html="person.name | highlight: $select.search"></div>
                                          <small>
@@ -192,10 +135,30 @@
     @endif
 
     @yield('content')
-
+    <br><br><br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default logo-vertical">
+                <img src="/assets/Verticalc.svg" alt="Vertical Pole & Fitness">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default dir-vertical">
+                <p>
+                    Av. Tercer Milenio #385<br>
+                    San Luis Potosí, 78211
+                </p>
+            </div>
+        </div>
+    </div>
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
+<script>
+    
+</script>
 </html>

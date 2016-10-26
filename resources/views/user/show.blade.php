@@ -1,100 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
-<style type="text/css">
-    .panel-heading{
-        background-color: #511B73 !important;
-        color: white !important;
-        font-size: 18px !important;
-    }
-    .btn-primary{
-        background-color: #FFE000 !important;
-        border:none !important;
-        transition: all 0.2s ease;
-    }
-    .btn-primary:hover{
-        background-color: #FBC02D !important;
-    }
-    .logo-vertical{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none !important;
-        box-shadow: none !important;
-    }
 
-    .dir-vertical{
-        border: none !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: none !important;
-    }
-
-    .dir-vertical p{
-        text-align: center;
-    }
-    .new-btn{
-        background-color: #FFE000;
-        font-size: 16px;
-        font-family: Lato;
-        padding: 7px;
-        color: #212121;
-        border-radius: 3px;
-        margin-right: 0;
-    }
-
-    .new-btn:hover{
-        text-decoration: none;
-    }
-
-    .pp-image{
-        margin: 1em auto;
-        text-align: center;
-    }
-
-    .pp-name{
-        text-align: center;
-        font-family: OstrichB;
-        font-size: 20px;
-    }
-
-</style>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                @if (Auth::user()->id != $user->id)
-                    <div class="panel-heading">Perfil de usuario</div>
-                @else
-                    <div class="panel-heading">Mi Perfil</div>
-                @endif
+            @if (Auth::user()->id != $user->id)
+                <h2>Perfil del Usuario</h2>
+            @else
+                <h2>Mi Perfil</h2>
+            @endif
                 <div class="pp-image">
-                    @if (Auth::user()->role_id == 1)
+                    @if ($user->role->title == 'Admin')
                         <img src="/assets/admin.svg" alt="Administrador">
                     @endif
-                    @if (Auth::user()->role_id == 2)
-                        <img src="/assets/ruler.svg" alt="Instructora">
+                    @if ($user->role->title == 'Maestra')
+                        <img src="/assets/teacher.svg" alt="Instructora">
                     @endif
-                    @if (Auth::user()->role_id == 3)
-                        <img src="/assets/orange.svg" alt="Nutrióloga">
+                    @if ($user->role->title == 'Nutriologa')
+                        <img src="/assets/nutri.svg" alt="Nutrióloga">
                     @endif
-                    @if (Auth::user()->role_id == 4)
+                    @if ( $user->role->title  == 'Alumna')
                         <img src="/assets/student.svg" alt="Alumna">
                     @endif
                 </div>
                 <h3 class="pp-name"> {{ $user->name }} </h3>
                 <hr>
+            <div class="panel panel-default">
                 <div class="panel-body">
                     @if (Auth::user()->role_id == 1)
+                        <div style="margin: 0 auto; text-align: center;">
                         <a href="{{ url('/user/'.$user->id.'/package') }}" class="new-btn">Agregar paquetes</a>
                         <a href="{{ url('/user/'.$user->id.'/medal') }}" class="new-btn">Otorgar medallas</a>
                         <a href="{{ url('/user/'.$user->id.'/edit') }}" class="new-btn">Editar usuario</a><br><br>
+                        </div>
                     @endif
                     <p><b>Email:</b> {{ $user->email }} </p>
                     @if ($user->phone) 
                         <p><b>Teléfono:</b> {{ $user->phone }} </p> 
                     @endif
+                    @if ($user->role->title == 'Alumna')
                     <p>
                         <b>Clases regulares disponibles:</b> {{ $user->regular_lessons }}. 
                         @if ($user->regular_lessons != 0)
@@ -107,6 +52,7 @@
                             Vencen el: {{ date('d M', strtotime($user->pole_expire)) }}
                         @endif
                     </p>
+                    @endif
                     @if (Auth::user()->role_id == 1)
                         <p>{{ $user->role->title }} </p>
                     @endif
@@ -146,7 +92,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
@@ -200,22 +145,6 @@
 
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default logo-vertical">
-                <img src="/assets/Verticalc.svg" alt="Vertical Pole & Fitness">
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default dir-vertical">
-                <p>
-                    Av. Tercer Milenio #385<br>
-                    San Luis Potosí, 78211
-                </p>
-            </div>
-        </div>
-    </div>
+    
 </div>
 @endsection

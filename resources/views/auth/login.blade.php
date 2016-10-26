@@ -2,7 +2,13 @@
 
 @section('content')
 
-<div class="container">
+<div class="container login-form">
+    <h1 class="col-md-8 col-md-offset-2">¡BIENVENIDA!</h1>
+    <p class="col-md-8 col-md-offset-2">Ingresa tu correo electrónico y tu contraseña para ingresar al sistema.
+    <br><br>
+    Si aún no tienes acceso, contáctate con alguna de nuestras instructoras, que con gusto te lo brindará.
+    <br><br>
+    </p>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
@@ -43,7 +49,7 @@
                             <div class="col-md-6 col-md-offset-4">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" name="remember"> ¿Recordarme?
+                                        <input type="checkbox" name="remember">&nbsp; ¿Recordarme?
                                     </label>
                                 </div>
                             </div>
@@ -51,10 +57,9 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-sign-in"></i> Iniciar Sesión
+                                <button type="submit" class="btn btn-primary col-md-12"> Iniciar Sesión
                                 </button>
-
+                                <br><br>
                                 <a class="btn btn-link" href="{{ url('/password/reset') }}">¿Olvidaste tu Contraseña?</a>
                             </div>
                         </div>
@@ -64,4 +69,5 @@
         </div>
     </div>
 </div>
+
 @endsection
