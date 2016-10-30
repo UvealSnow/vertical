@@ -57,6 +57,7 @@ Route::get('/user/profile', 'UserController@userProfile');
 Route::post('/user/profile', 'UserController@userShow');
 Route::get('/user/{uid}/medal', 'UserController@medalForm');
 Route::post('/user/{uid}/medal', 'UserController@giveMedal');
+Route::resource('/user/{uid}/details', 'DetailController', ['except' => ['index', 'destoy']]);
 Route::resource('user', 'UserController');
 
 Route::auth();

@@ -67,6 +67,15 @@
                             </div>
                         </div>
 
+                        {{--  Solo hay que hacer un script que muestre el campo cuando selecciones maestras
+                        <div class="form-group{{ $errors->has('desc') ? ' has-error' : '' }}">
+                            <label for="desc" class="col-md-4 control-label">Descripción (Bio)</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control" name="desc"></textarea>
+                            </div>
+                        </div>
+                        --}}
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

@@ -7,8 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Medal;
 
-class MedalController extends Controller
-{
+class MedalController extends Controller {
+
+    public function __construct () {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -46,7 +50,7 @@ class MedalController extends Controller
             'img' => 'required|image'
         ]);
 
-        if (Auth::user()->role_id == 1) {
+        if (Auth::user() && Auth::user()->role_id == 1) {
             $medal = new Medal;
 
             $imgName = $this->generateKey().'.'.$request->file('img')->getClientOriginalExtension();

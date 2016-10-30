@@ -16,18 +16,6 @@ class LectureController extends Controller {
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index() {
-        $lectures = Lecture::all();
-        return view ('lecture.index', [
-            'lectures' => $lectures,
-        ]);
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -80,7 +68,7 @@ class LectureController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($user_id, $id) {
 
         $lecture = Lecture::find($id);
 
@@ -129,8 +117,8 @@ class LectureController extends Controller {
         $lecture->name = $request->name;
         $lecture->teacher_id = $request->teacher_id;
         $lecture->max_students = $request->max_num;
-        if ($request->is_pole == 'pole') $lecture->is_pole = true;
-        else $lecture->is_pole = false;
+        $lecture->is_pole = false;
+        if ($request->type == 'pole') $lecture->is_pole = true;
         $lecture->save();
 
         return redirect ("/lecture/$lecture->id");

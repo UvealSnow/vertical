@@ -32,6 +32,11 @@
                         <div style="margin: 0 auto; text-align: center;">
                         <a href="{{ url('/user/'.$user->id.'/package') }}" class="new-btn">Agregar paquetes</a>
                         <a href="{{ url('/user/'.$user->id.'/medal') }}" class="new-btn">Otorgar medallas</a>
+                        @if (!$user->details)
+                            <a href="{{ url('/user/'.$user->id.'/details/create') }}" class="new-btn">Agregar detalles</a>
+                        @else
+                            <a href="{{ url('/user/'.$user->id.'/details/'.$user->details->id) }}" class="new-btn">Ver detalles</a>
+                        @endif
                         <a href="{{ url('/user/'.$user->id.'/edit') }}" class="new-btn">Editar usuario</a><br><br>
                         </div>
                     @endif
@@ -99,9 +104,9 @@
                 <div class="panel-body">
                     @if ($user->role_id == 2)
                        
-                        @if (count($user->lectures) > 0)
+                        @if (count($user->teaches) > 0)
                             <h1>Das clases de:</h1><br>
-                            @foreach ($user->lectures as $lecture)
+                            @foreach ($user->teaches as $lecture)
                                 Clase de: <a href="{{ url("lecture/$lecture->id") }}">{{ $lecture->name }}</a> <br><br>
                             @endforeach
                         @else 

@@ -23,6 +23,10 @@ class User extends Authenticatable {
         'password', 'remember_token',
     ];
 
+    public function details () {
+        return $this->hasOne('App\Detail');
+    }
+
     public function role () {
         return $this->belongsTo('App\Role');
     }
@@ -41,6 +45,10 @@ class User extends Authenticatable {
 
     public function diets () {
         return $this->hasMany('App\Diet', 'nutriologist_id');
+    }
+
+    public function teaches () {
+        return $this->hasMany('App\Lecture', 'teacher_id');
     }
 
 }

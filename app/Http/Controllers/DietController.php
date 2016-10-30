@@ -11,8 +11,11 @@ use App\Diet;
 use App\Meal;
 use DB;
 
-class DietController extends Controller
-{
+class DietController extends Controller {
+
+    public function __construct () {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
