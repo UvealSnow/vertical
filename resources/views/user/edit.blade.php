@@ -15,14 +15,7 @@
                         <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
                             <label for="first_name" class="col-md-4 control-label">Nombre(s)</label>
                             <div class="col-md-6">
-                                <input id="text" type="first_name" class="form-control" name="first_name" placeholder="Nombres" value="{{ $user->first_name }}">
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
-                            <label for="last_name" class="col-md-4 control-label">Apellido(s)</label>
-                            <div class="col-md-6">
-                                <input id="text" type="last_name" class="form-control" name="last_name" placeholder="Apellidos" value="{{ $user->last_name }}">
+                                <input id="text" type="first_name" class="form-control" name="first_name" placeholder="Nombres" value="{{ $user->name }}">
                             </div>
                         </div>
 
@@ -34,7 +27,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                            <label for="phone" class="col-md-4 control-label">Teléfono celular</label>
+                            <label for="phone" class="col-md-4 control-label">Teléfono</label>
                             <div class="col-md-6">
                                 <input id="text" type="tel" class="form-control" name="phone" placeholder="Teléfono celular" value="{{ $user->phone }}">
                             </div>
@@ -43,7 +36,7 @@
                         <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
                             <label for="phone" class="col-md-4 control-label">Clases regulares</label>
                             <div class="col-md-6">
-                                <input type="number" class="form-control" name="regular_lessons" min="0" value="{{ $user->available_lessons }}">
+                                <input type="number" class="form-control" name="regular_lessons" min="0" value="{{ $user->regular_lessons }}">
                             </div>
                         </div>
 

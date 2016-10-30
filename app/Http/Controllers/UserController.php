@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\User;
 use App\Package;
 use App\Medal;
+use App\Details;
 use DB;
 
 class UserController extends Controller
@@ -61,6 +62,8 @@ class UserController extends Controller
         $user->img = 'placeholder.png';
         $user->name = $request->first_name.' '.$request->last_name;
         $user->phone = $request->phone;
+        $user->desc = null;
+        if ($request->desc != '') $user->desc = $request->desc;
 
         $user->save();
         return redirect('/user');
@@ -88,8 +91,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $user = User::find($id);
         return view('user.edit', [
             'user' => $user,
