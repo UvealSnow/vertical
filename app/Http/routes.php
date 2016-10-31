@@ -35,6 +35,35 @@ Route::get('/aerobics', function () {
 	return view('static.aerobics');
 });
 
+Route::get('/calendar', function () {
+	$events = [];
+
+	$events[] = \Calendar::event(
+	    'Kevin B-Day', //event title
+	    true, //full day event?
+	    '2016-11-10', //start time (you can also use Carbon instead of DateTime)
+	    '2016-11-10', //end time (you can also use Carbon instead of DateTime)
+	    0 //optionally, you can specify an event ID
+	);
+
+	$events[] = \Calendar::event(
+	    "Valentine's Day", //event title
+	    true, //full day event?
+	    new \DateTime('2017-02-14'), //start time (you can also use Carbon instead of DateTime)
+	    new \DateTime('2017-02-14'), //end time (you can also use Carbon instead of DateTime)
+	    'stringEventId' //optionally, you can specify an event ID
+	);
+
+	#$eloquentEvent = EventModel::first(); //EventModel implements MaddHatter\LaravelFullcalendar\Event
+
+	$calendar = \Calendar::addEvents($events) //add an array with addEvents
+	    ->setOptions([ //set fullcalendar options
+	        'firstDay' => 1
+	    ]); 
+
+	return view('calendar', compact('calendar'));
+});
+
 Route::resource('medal', 'MedalController');
 
 Route::resource('package', 'PackageController');
