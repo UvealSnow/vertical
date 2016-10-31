@@ -16,6 +16,18 @@ class LectureController extends Controller {
     }
 
     /**
+       * Display a listing of the resource.
+       *
+       * @return \Illuminate\Http\Response
+       */
+    public function index() {
+        $lectures = Lecture::all();
+        return view ('lecture.index', [
+            'lectures' => $lectures,
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
