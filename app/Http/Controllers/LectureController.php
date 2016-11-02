@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use App\Http\Requests;
 
 use App\Lecture;
@@ -84,7 +85,10 @@ class LectureController extends Controller {
 
         $lecture = Lecture::find($id);
 
+        $calendar = $this->showCalendar($lecture);
+
         return view ('lecture.show', [
+            'calendar' => $calendar,
             'lecture' => $lecture,
         ]);
 
@@ -162,5 +166,64 @@ class LectureController extends Controller {
     public function getTeachers () {
         $teachers = DB::table('users')->where('role_id', 2)->get();
         return $teachers;
+    }
+
+    public function showCalendar (Lecture $lecture) {
+
+        $events =  []; # Iniciar arreglo vació de eventos con los cuales llenar el calendario
+
+        # $lectures = Lecture::all(); # Obtener todas las clases que se están dando en Vertical
+
+        #foreach ($lectures as $lecture) { # Ir clase por clase
+            if (count($lecture->schedule) > 0) { # sól si la clase tiene un horario definido
+                foreach ($lecture->schedule as $agenda) { # ir horario por horario de cada clase
+                    
+                    if ($start_date = $this->translateDay($agenda)) { # si pudimos obtener una fecha inicial de la función
+
+                        $name = $lecture->name.' con '.$lecture->teacher->name; # Un poco de edición al nombre
+                        $end_date = $this->translateDay($agenda, false); # el segundo parámetro opcional false nos dice que buscamos la hora a la que termina
+                        $url = "/lecture/$lecture->id/agenda/$agenda->id/enroll"; # Creamos la liga para el enroll
+
+                        $events[] = Calendar::event($name, false, $start_date, $end_date, null, ['url' => $url]); # Agregar evento al arreglo eventos
+
+                    }
+
+                }
+            }
+        #}
+
+        $calendar = Calendar::addEvents($events)->setOptions([ # Inicializamos el calndario con los eventos que generamos
+            'firstDay' => 1, # Lunes = primer día
+            'header' => [ # Eliminamos el UI con esto
+                'left' => '', 
+                'center' => '',
+                'right' => '',
+             ],
+             'defaultView' => 'agendaWeek' # cambiamos vista inicial
+        ]); 
+
+        return $calendar;
+        # return view ('calendar', compact('calendar')); # regresamos la vista calendar.blade.php con la variabe $calendar como parámetro
+
+    }
+
+    public function translateDay (\App\Agenda $agenda, $start = true) {
+
+        if ($agenda->day == 'Lunes') $day = 'Monday';
+        elseif ($agenda->day == 'Martes') $day = 'Tuesday';
+        elseif ($agenda->day == 'Miércoles') $day = 'Wednesday';
+        elseif ($agenda->day == 'Jueves') $day = 'Thursday';
+        elseif ($agenda->day == 'Viernes') $day = 'Friday';
+        elseif ($agenda->day == 'Sábado') $day = 'Saturday';
+        elseif ($agenda->day == 'Domingo') $day = 'Sunday';
+        else return false;
+
+        if ($start) $hour = str_replace(':', '', $agenda->begins);
+        else $hour = str_replace(':', '', $agenda->ends);
+
+        $date = date('Y-m-').date('d', strtotime('this '.$day));
+
+        return $date.'T'.$hour;
+
     }
 }

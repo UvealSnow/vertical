@@ -5,16 +5,6 @@ var app = angular.module('verticalApp', ['ui.select', 'ngSanitize'],
 	}
 );
 
-$(document).ready(function() {
-
-    // page is now ready, initialize the calendar...
-
-    $('#calendar').fullCalendar({
-        // put your options and callbacks here
-    })
-
-});
-
 app.controller('scheduleCtrl', ['$scope', function ($scope) {
 
     $scope.days = [{ 'day_id': 1 }];

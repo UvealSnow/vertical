@@ -35,6 +35,7 @@
                 <hr><br>
 
                 @if (count($lecture->schedule) > 0)
+                    {{-- 
                     @foreach ($lecture->schedule as $lesson)
                         <div class="row">
                             <div class="col-sm-12">
@@ -57,6 +58,9 @@
                         </div>
                         <hr>
                     @endforeach
+                    --}}
+                    {!! $calendar->calendar() !!}
+                    {!! $calendar->script() !!}
                 @else
                     <br>
                     <p>No hay un horario definido para esta clase</p>
