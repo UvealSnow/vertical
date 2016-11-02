@@ -80,7 +80,7 @@ class LessonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show (Request $request, $id) {
+    public function show ($id) {
 
         $user = $request->user();
         $user->lessons = $user->lessons()->where('lesson_id', $id)->get();
