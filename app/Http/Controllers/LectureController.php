@@ -198,8 +198,16 @@ class LectureController extends Controller {
                 'left' => '', 
                 'center' => '',
                 'right' => '',
-             ],
-             'defaultView' => 'agendaWeek' # cambiamos vista inicial
+            ],
+            'defaultView' => 'agendaWeek', # cambiamos vista inicial
+            'hiddenDays' => [6, 0],
+            'businessHours' => [
+                'dow' => [1, 2, 3, 4, 5],
+                'start' => '07:00',
+                'end' => '23:00',
+            ],
+            'minTime' => '07:00:00',
+            'maxTime' => '23:00:00'
         ]); 
 
         return $calendar;
