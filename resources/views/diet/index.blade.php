@@ -141,7 +141,7 @@
                                 <div class="col-md-3">
                                     <p><strong>Opciones</strong></p>
                                     <a class="btn btn-xs btn-warning" href="{{ url("/diet/$diet->id/edit") }}">Editar</a>
-                                    <form style="display: inline-block;" action="{{ url("/diet") }}" method="post">
+                                    <form style="display: inline-block;" action="{{ url("/diet/$diet->id") }}" method="post">
                                         {{ csrf_field() }}
                                         <input type="hidden" name="_method" value="delete">
                                         <button class="btn btn-xs btn danger">Eliminar</button>
