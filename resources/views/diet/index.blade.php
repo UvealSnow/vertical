@@ -125,16 +125,29 @@
                         
                     @if (count($diets) > 0)
                         @foreach ($diets as $diet)
-                            <p>
-                                <a href="{{ url("/diet/$diet->id") }}">{{ $diet->name }}</a> para: 
-                                <a href="{{ url("/user/$diet->user_id") }}">{{ $diet->student->name }}</a><br><br>
-                                <form action="{{ url("/diet/$diet->id") }}" method="post" style="display: inline-block;">
-                                    {{ csrf_field() }}
-                                    <input type="hidden" name="_method" value="delete">
-                                    <button class="btn btn-xs btn-danger">Eliminar</button>
-                                </form>
-                            </p> 
-                            <br><br>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p><strong>Dieta</strong></p>
+                                    <p><a href="{{ url("/diet/$diet->id") }}">{{ $diet->name }}</a></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p><strong>Nutrióloga</strong></p>
+                                    <p>{{ $diet->nutriologist->name }}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p><strong>Alumnas</strong></p>
+                                    <p>{{ $diet->student->name }}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p><strong>Opciones</strong></p>
+                                    <a class="btn btn-xs btn-warning" href="{{ url("/diet/$diet->id/edit") }}">Editar</a>
+                                    <form style="display: inline-block;" action="{{ url("/diet") }}" method="post">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="_method" value="delete">
+                                        <button class="btn btn-xs btn danger">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
                         @endforeach
                     @else
                         <p>No has creado ninguna dieta.</p>

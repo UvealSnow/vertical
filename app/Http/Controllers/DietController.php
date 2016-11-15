@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests;
 
 use App\User;
@@ -40,7 +41,7 @@ class DietController extends Controller {
     public function create() {
         $user = Auth::user();
         if ($user->role_id == 3)  {
-            $students = User::where('role_id', 4)->get();
+            $students = User::doesntHave('diet')->get();
             return view ('diet.create', [
                 'students' => $students,
             ]);
@@ -78,6 +79,7 @@ class DietController extends Controller {
         $diet->name = $request->name;
         $diet->nutriologist_id = Auth::user()->id;
         $diet->user_id = $request->student_id;
+        if ($request->file('diet_file') != null) $diet->file = Storage::put(md5($request->file('diet_file')), $request->file('diet_file'));
 
         $diet->save();
 
@@ -124,9 +126,17 @@ class DietController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id) {
+        
+        $diet = Diet::findOrFail($id);
+        #$students = User::where('role_id', 4)->get();
+        $students = User::doesntHave('diet')->get();
+
+        return view ('diet.edit', [
+            'students' => $students,
+            'diet' => $diet,
+        ]);
+
     }
 
     /**
@@ -136,9 +146,53 @@ class DietController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, $id) {
+
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'student_id' => 'required|numeric|exists:users,id',
+            'meals.breakfast' => 'required|string',
+            'meals.mid_day' => 'required|string',
+            'meals.lunch' => 'required|string',
+            'meals.snack' => 'required|string',
+            'meals.dinner' => 'required|string',
+            'diet_file' => 'file'
+        ]);  
+        
+        $diet = Diet::findOrFail($id);
+
+        $diet->name = $request->name;
+        $diet->nutriologist_id = Auth::user()->id;
+        $diet->user_id = $request->student_id;
+
+        if ($request->file('diet_file') != null) {
+            if ($diet->file) Storage::delete($diet->file);
+            $diet->file = md5($request->file('diet_file')).'.'.$request->file('diet_file')->getClientOriginalExtension();
+            Storage::put($diet->file, file_get_contents($request->file('diet_file')));
+        }
+
+        $diet->save();
+
+        $i = 0;
+        foreach ($request->meals as $food) { 
+            $meal = new Meal;
+
+            $meal->diet_id = $diet->id;
+            if ($i == 0) $meal->time = 'Desayuno';
+            elseif ($i == 1) $meal->time = 'Medio Día';
+            elseif ($i == 2) $meal->time = 'Comida';
+            elseif ($i == 3) $meal->time = 'Merienda';
+            elseif ($i == 4) $meal->time = 'Cena';
+
+            $meal->body = $food;
+
+            $meal->save();
+
+            $i++;
+        }
+
+        return redirect ("/diet/$diet->id")->with('success', 'La dieta fue creada y asignada correctamente');
+
     }
 
     /**

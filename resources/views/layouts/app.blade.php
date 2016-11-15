@@ -76,6 +76,9 @@
                     @elseif (Auth::user()->role_id == 3)
                         <li><a href="{{ url('/diet') }}">Dietas</a></li>
                     @elseif (Auth::user()->role_id == 4)
+                        @if (Auth::user()->diet)
+                            <li><a href="{{ url('/diet/'.Auth::user()->diet->id) }}">Dieta</a></li>
+                        @endif
                         <li><a href="{{ url('/lecture') }}">Clases</a></li>
                         <li><a href="{{ url('/user/profile') }}">Medallas</a></li>
                     @endif

@@ -197,23 +197,11 @@
                 	<p>{{ $meal->body }}</p><br>
                 @endforeach
 
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default logo-vertical">
-                <img src="/assets/Verticalc.svg" alt="Vertical Pole & Fitness">
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default dir-vertical">
-                <p>
-                    Av. Tercer Milenio #385<br>
-                    San Luis Potosí, 78211
-                </p>
+                @if ($diet->file)
+                    <p><strong>Archivo de la dieta</strong></p>
+                    <p><a class="btn btn-success" target="_blank" href="{{ Storage::url($diet->file) }}">Descargar.</a></p>
+                @endif
+
             </div>
         </div>
     </div>

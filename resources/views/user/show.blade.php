@@ -148,6 +148,30 @@
             </div>
         </div>
 
+        @if ($user->diet)
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Dieta</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p><strong>Nombre</strong></p>
+                                <p>{{ $user->diet->name }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Nutrióloga</strong></p>
+                                <p>{{ $user->diet->nutriologist->name }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Opciones</strong></p>
+                                <p><a class="btn btn-success" href="{{ url("/diet/".$user->diet->id) }}">Detalles</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         </div>
     </div>
     
