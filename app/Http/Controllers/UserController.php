@@ -128,9 +128,15 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $user = User::find($id);
+
+        if ($user->teaches->count() > 0) {
+            foreach ($user->teaches as $lecture) {
+                $lecture->delete();
+            }
+        }
+
         $user->delete();
         return redirect('/user');
     }
