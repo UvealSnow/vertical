@@ -12,7 +12,9 @@
     </style>
 </head>
 <body>
+	<div style="width: 900px;">
     {!! $calendar->calendar() !!}
     {!! $calendar->script() !!}
+    </div>
 </body>
 </html>
